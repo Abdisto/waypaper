@@ -17,18 +17,13 @@
     in {
       default = pkgs.python3.pkgs.buildPythonApplication rec {
         pname = "waypaper";
-        version = "2.4";
+        version = "unstable";  # Reflects that it's not pinned to a specific commit
         pyproject = true;
 
-        src = pkgs.fetchFromGitHub {
-          owner = "anufrievroman";
-          repo = "waypaper";
-          rev = "84319c3e4e22ed53e1d1b022ce6defcbe1656757";
-          hash = "sha256-uQ+NQ0/xYU0N1CnXsa2zghgNaOPxWpMJXSUJJ9W7140=";
+        src = pkgs.fetchGit {
+          url = "https://github.com/anufrievroman/waypaper.git";
+          rev = "main";  # Use the default branch (can also be a specific branch or commit hash)
         };
-
-        # Ensure Python detects the correct project structure
-        sourceRoot = "source";
 
         nativeBuildInputs = [
           pkgs.gobject-introspection
@@ -56,7 +51,7 @@
         '';
 
         meta = with pkgs.lib; {
-          changelog = "https://github.com/anufrievroman/waypaper/releases/tag/${version}";
+          changelog = "https://github.com/anufrievroman/waypaper/releases";
           description = "GUI wallpaper setter for Wayland-based window managers";
           mainProgram = "waypaper";
           longDescription = ''
