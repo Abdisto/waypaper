@@ -20,7 +20,7 @@
         version = "unstable";  # Reflects that it's not pinned to a specific commit
         pyproject = true;
 
-        src = pkgs.fetchGit {
+        src = pkgs.fetchgit {
           url = "https://github.com/anufrievroman/waypaper.git";
           rev = "main";  # Use the default branch (can also be a specific branch or commit hash)
         };
