@@ -22,7 +22,8 @@
 
         src = pkgs.fetchgit {
           url = "https://github.com/Abdisto/waypaper.git";
-          rev = "main";  # Use the default branch (can also be a specific branch or commit hash)
+          ref = "main";  # Use the default branch (can also be a specific branch or commit hash)
+          rev = "HEAD";
         };
 
         nativeBuildInputs = [
