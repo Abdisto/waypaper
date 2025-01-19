@@ -34,6 +34,9 @@
           pkgs.python3.pkgs.platformdirs
           pkgs.python3.pkgs.importlib-metadata
           pkgs.python3.pkgs.pillow
+	  pkgs.python3.pkgs.imageio
+	  pkgs.python3.pkgs.imageio-ffmpeg
+          pkgs.python3.pkgs.screeninfo
         ];
 
         propagatedBuildInputs = [ pkgs.killall ];
@@ -43,11 +46,8 @@
 
         dontWrapGApps = true;
 
-        preFixup = ''
-          makeWrapperArgs+=(\"''${gappsWrapperArgs[@]}\")
-        '';
-
-        meta = with pkgs.lib; {
+        
+	meta = with pkgs.lib; {
           changelog = "https://github.com/anufrievroman/waypaper/releases";
           description = "GUI wallpaper setter for Wayland-based window managers";
           mainProgram = "waypaper";
