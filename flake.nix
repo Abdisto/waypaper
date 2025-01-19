@@ -21,7 +21,7 @@
         pyproject = true;
 
         src = pkgs.fetchgit {
-          url = "https://github.com/anufrievroman/waypaper.git";
+          url = "https://github.com/Abdisto/waypaper.git";
           rev = "main";  # Use the default branch (can also be a specific branch or commit hash)
         };
 
