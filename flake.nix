@@ -20,11 +20,7 @@
         version = "unstable";  # Reflects that it's not pinned to a specific commit
         pyproject = true;
 
-        src = pkgs.fetchgit {
-          url = "https://github.com/Abdisto/waypaper.git";
-          ref = "main";  # Use the default branch (can also be a specific branch or commit hash)
-          rev = "HEAD";
-        };
+        src = ./.;
 
         nativeBuildInputs = [
           pkgs.gobject-introspection
