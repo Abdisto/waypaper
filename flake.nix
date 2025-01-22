@@ -43,6 +43,7 @@
           pkgs.python3Packages.imageio-ffmpeg
           pkgs.python3Packages.screeninfo
           pkgs.python3Packages.platformdirs
+          pkgs.socat
         ];
 
         # No tests available
