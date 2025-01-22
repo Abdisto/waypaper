@@ -7,54 +7,58 @@
 
   outputs = { self, nixpkgs }: {
     packages.x86_64-linux = let
-      inherit (nixpkgs) lib;
       pkgs = import nixpkgs {
         system = "x86_64-linux";
-        config = {
-          allowUnfree = true;
-        };
+        config.allowUnfree = true;
       };
     in {
-      default = pkgs.python3.pkgs.buildPythonApplication rec {
+      default = pkgs.python3Packages.buildPythonPackage rec {
         pname = "waypaper";
-        version = "unstable";  # Reflects that it's not pinned to a specific commit
-        pyproject = true;
+        version = "unstable";
 
         src = ./.;
 
         nativeBuildInputs = [
           pkgs.gobject-introspection
-          pkgs.wrapGAppsHook3
+          pkgs.wrapGAppsHook  # Ensures GTK libraries are wrapped correctly
         ];
 
-        build-system = [ pkgs.python3.pkgs.setuptools ];
-
-        dependencies = [
-          pkgs.python3.pkgs.pygobject3
-          pkgs.python3.pkgs.platformdirs
-          pkgs.python3.pkgs.importlib-metadata
-          pkgs.python3.pkgs.pillow
-	  pkgs.python3.pkgs.imageio
-	  pkgs.python3.pkgs.imageio-ffmpeg
-          pkgs.python3.pkgs.screeninfo
+        buildInputs = [
+          pkgs.gtk3
+          pkgs.python3Packages.pygobject3
+          pkgs.python3Packages.pillow
+          pkgs.python3Packages.imageio
+          pkgs.python3Packages.imageio-ffmpeg
+          pkgs.python3Packages.screeninfo
+          pkgs.python3Packages.platformdirs
         ];
 
-        propagatedBuildInputs = [ pkgs.killall ];
+        propagatedBuildInputs = [
+          pkgs.killall
+          pkgs.gtk3
+          pkgs.python3Packages.pygobject3
+          pkgs.python3Packages.importlib-metadata
+          pkgs.python3Packages.imageio
+          pkgs.python3Packages.pillow
+          pkgs.python3Packages.imageio-ffmpeg
+          pkgs.python3Packages.screeninfo
+          pkgs.python3Packages.platformdirs
+        ];
 
-        # has no tests
+        # No tests available
         doCheck = false;
 
-        dontWrapGApps = true;
+        # Let wrapGAppsHook handle wrapping
+        dontWrapGApps = false;
 
-        
-	meta = with pkgs.lib; {
+        meta = with pkgs.lib; {
           changelog = "https://github.com/anufrievroman/waypaper/releases";
           description = "GUI wallpaper setter for Wayland-based window managers";
           mainProgram = "waypaper";
           longDescription = ''
             GUI wallpaper setter for Wayland-based window managers that works as a frontend for popular backends like swaybg and swww.
 
-            If wallpaper does not change, make sure that swaybg or swww is installed.
+            If the wallpaper does not change, make sure that swaybg or swww is installed.
           '';
           homepage = "https://github.com/anufrievroman/waypaper";
           license = licenses.gpl3Only;
@@ -65,15 +69,15 @@
     };
 
     devShells.x86_64-linux = let
-      pkgs = import nixpkgs {
-        system = "x86_64-linux";
-      };
+      pkgs = import nixpkgs { system = "x86_64-linux"; };
     in pkgs.mkShell {
       buildInputs = with pkgs; [
+        gtk3
         python3
         gobject-introspection
-        wrapGAppsHook3
+        wrapGAppsHook
         killall
+        pkgs.python3Packages.pygobject3
       ];
     };
   };
