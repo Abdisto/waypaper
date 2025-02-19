@@ -14,18 +14,19 @@ class English:
         self.msg_arg_rest = "restore last wallpaper"
         self.msg_arg_back = "specify which backend to use to set wallpaper"
         self.msg_arg_rand = "set a random wallpaper"
-        self.msg_arg_list = "list wallpapers in json to standard out"
+        self.msg_arg_list = "lists some parameters in json to standard out"
         self.msg_arg_wall = "set the specified wallpaper"
         self.msg_arg_folder = "specify which folder to scan for wallpapers"
         self.msg_arg_statefile = "specify a custom file to store the application state"
         self.msg_arg_monitor = "specify desired monitor using its name"
-        self.msg_arg_post = "prevents ruuning post_command"
+        self.msg_arg_post = "prevents running post_command set in config"
+        self.msg_arg_show_path_in_tooltip = "show the relative path in the tooltip"
 
-        self.msg_path = "Selected image path:"
         self.msg_select = "Select"
         self.msg_refresh = "Refresh"
         self.msg_clear = "Clear"
-        self.msg_stop = "Stop"
+        self.msg_start = "Start auto-change"
+        self.msg_stop = "Stop all"
         self.msg_sound = "Sound"
         self.msg_pause = "Pause"
         self.msg_search = "Search"
@@ -40,10 +41,11 @@ class English:
         self.msg_changefolder = "Folder"
         self.msg_choosefolder = "Please choose a folder"
         self.msg_caching = "Caching wallpapers..."
+        self.msg_show_path_in_tooltip = "Show path in tooltip"
 
         self.msg_help = "Waypaper's hotkeys:\n\nhjkl - Navigation (←↓↑→)\nEnter - Set selected wallpaper\nf - Change wallpaper folder\n"
         self.msg_help += "g - Scroll to top\nG - Scroll to bottom\nR - Set random wallpaper\nr - Recache wallpapers\n"
-        self.msg_help += ". - Toggle hidden images\ns - Toggle images in subfolders\n? - Help\nq - Exit\n\n"
+        self.msg_help += ". - Toggle hidden images\ns - Toggle images in subfolders\n/ - Search\n? - Help\nq - Exit\n\n"
         self.msg_help += self.msg_info
 
         self.err_cache = "Error deleting cache"
@@ -63,9 +65,11 @@ class English:
         self.tip_random = "Set random wallpaper"
         self.tip_exit = "Exit the application"
         self.tip_transition = "Choose transition type"
-        self.tip_mpv_stop = "Stop all mpv processes"
+        self.tip_mpv_stop = "Stop all all mpv processes"
         self.tip_mpv_pause = "Play/Pause video wallpaper"
         self.tip_mpv_sound = "Play sound of the video"
+        self.tip_timer = "How often to automatically change wallpaper"
+        self.tip_start = "Initiate automatic change of wallpaper after a time interval"
 
 
 class German:
@@ -78,19 +82,21 @@ class German:
         self.msg_arg_rest = "stellt das zuletzt verwendete Hintergrundbild wieder her"
         self.msg_arg_back = "legt das Backend fest, welches zum Setzen des Hintergrundbildes verwendet werden soll"
         self.msg_arg_rand = "wählt ein zufälliges Hintergrundbild aus"
-        self.msg_arg_list = "list wallpapers in json to standard out"
+        self.msg_arg_list = "lists some parameters in json to standard out"
         self.msg_arg_wall = "setzt das angegebene Hintergrundbild"
         self.msg_arg_folder = "legt fest, welcher Ordner nach Hintergrundbildern durchsucht werden soll"
         self.msg_arg_statefile = "specify a custom file to store the application state"
         self.msg_arg_monitor = "geben Sie den gewünschten Monitor mit seinem Namen an"
-        self.msg_arg_post = "prevents ruuning post_command"
+        self.msg_arg_post = "prevents running post_command set in config"
+        self.msg_arg_show_path_in_tooltip = "show the relative path in the tooltip"
+        self.msg_show_path_in_tooltip = "Show path in tooltip"
 
-        self.msg_path = "Pfad zum ausgewählten Bild:"
         self.msg_select = "Auswählen"
         self.msg_refresh = "Aktualisieren"
         self.msg_random = "Zufällig"
         self.msg_clear = "Löschen"
-        self.msg_stop = "Stopp"
+        self.msg_start = "Start auto-change"
+        self.msg_stop = "Stop all"
         self.msg_sound = "Sound"
         self.msg_pause = "Pause"
         self.msg_search = "Suchen"
@@ -104,10 +110,11 @@ class German:
         self.msg_changefolder = "Ordner"
         self.msg_choosefolder = "Bitte wählen Sie einen Ordner aus"
         self.msg_caching = "Hintergrundbilder werden zwischengespeichert..."
+        self.msg_show_path_in_tooltip = "Show path in tooltip"
 
         self.msg_help = "Waypapers Tastenkürzel:\n\nhjkl - Navigation (←↓↑→)\nf - Hintergrundbild-Ordner ändern\n"
         self.msg_help += "g - Zum Anfang scrollen\nG - Zum Ende scrollen\nR - Zufälliges Hintergrundbild\nr - Hintergrundbilder zwischenspeichern\n"
-        self.msg_help += ". - Versteckte Bilder einbeziehen/ausschließen\ns - Unterordner mit einbeziehen\n? - Hilfe\nq - Beenden\n\n"
+        self.msg_help += ". - Versteckte Bilder einbeziehen/ausschließen\ns - Unterordner mit einbeziehen\n/ - Search\n? - Hilfe\nq - Beenden\n\n"
         self.msg_help += self.msg_info
 
         self.err_cache = "Fehler beim Löschen des Zwischenspeichers"
@@ -127,9 +134,11 @@ class German:
         self.tip_random = "Ein zufälliges Hintergrundbild auswählen"
         self.tip_exit = "Das Programm beenden"
         self.tip_transition = "Übergangstyp auswählen"
-        self.tip_mpv_stop = "Stoppe alle mpv-Prozesse"
+        self.tip_mpv_stop = "Stop allpe alle mpv-Prozesse"
         self.tip_mpv_pause = "Pause Video-Wallpaper"
         self.tip_mpv_sound = "Play sound of the video"
+        self.tip_timer = "How often to automatically change wallpaper"
+        self.tip_start = "Initiate automatic change of wallpaper after a time interval"
 
 class French:
     def __init__(self):
@@ -141,18 +150,19 @@ class French:
         self.msg_arg_rest = "restaurer le dernier papier peint"
         self.msg_arg_back = "spécifier quel backend utiliser pour définir le papier peint"
         self.msg_arg_rand = "définir un papier peint aléatoire"
-        self.msg_arg_list = "list wallpapers in json to standard out"
+        self.msg_arg_list = "lists some parameters in json to standard out"
         self.msg_arg_wall = "set the specified wallpaper"
         self.msg_arg_folder = "specify which folder to scan for wallpapers"
         self.msg_arg_statefile = "specify a custom file to store the application state"
         self.msg_arg_monitor = "spécifiez le moniteur souhaité en utilisant son nom"
-        self.msg_arg_post = "prevents ruuning post_command"
+        self.msg_arg_post = "prevents running post_command set in config"
+        self.msg_arg_show_path_in_tooltip = "show the relative path in the tooltip"
 
-        self.msg_path = "Chemin de l'image sélectionnée :"
         self.msg_select = "Sélectionner"
         self.msg_refresh = "Actualiser"
         self.msg_random = "Aléatoire"
         self.msg_clear = "Effacer"
+        self.msg_start = "Start auto-change"
         self.msg_stop = "Arrêter"
         self.msg_sound = "Sound"
         self.msg_pause = "Pause"
@@ -167,10 +177,11 @@ class French:
         self.msg_changefolder = "Dossier"
         self.msg_choosefolder = "Veuillez choisir un dossier"
         self.msg_caching = "Mise en cache des papiers peints..."
+        self.msg_show_path_in_tooltip = "Show path in tooltip"
 
         self.msg_help = "Raccourcis clavier de Waypaper :\n\nhjkl - Navigation (←↓↑→)\nf - Changer de dossier de papier peint\n"
         self.msg_help += "g - Faire défiler vers le haut\nG - Faire défiler vers le bas\nR - Définir un papier peint aléatoire\nr - Recréer le cache des papiers peints\n"
-        self.msg_help += ". - Inclure/exclure les images cachées\ns - Inclure/exclure les images des sous-dossiers\n? - Aide\nq - Quitter\n\n"
+        self.msg_help += ". - Inclure/exclure les images cachées\ns - Inclure/exclure les images des sous-dossiers\n/ - Search\n? - Aide\nq - Quitter\n\n"
         self.msg_help += self.msg_info
 
         self.err_cache = "Erreur lors de la suppression du cache"
@@ -193,6 +204,8 @@ class French:
         self.tip_mpv_stop = "Arrêter tous les processus mpv"
         self.tip_mpv_pause = "Pause du fond d'écran vidéo"
         self.tip_mpv_sound = "Play sound of the video"
+        self.tip_timer = "How often to automatically change wallpaper"
+        self.tip_start = "Initiate automatic change of wallpaper after a time interval"
 
 class Polish:
     def __init__(self):
@@ -209,14 +222,15 @@ class Polish:
         self.msg_arg_folder = "ustaw folder do przeskanowania szukając tapet"
         self.msg_arg_statefile = "ustaw plik, żeby przechowywać stan aplikacji"
         self.msg_arg_monitor = "ustaw pożądany monitor używając jego nazwy"
-        self.msg_arg_post = "prevents ruuning post_command"
+        self.msg_arg_post = "prevents running post_command set in config"
+        self.msg_arg_show_path_in_tooltip = "show the relative path in the tooltip"
 
-        self.msg_path = "Ustaw ścieżkę pliku:"
         self.msg_select = "Wybierz"
         self.msg_refresh = "Odświerz"
         self.msg_clear = "Wyczyść"
-        self.msg_stop = "Stop"
-        self.msg_sound = "Sound"
+        self.msg_start = "Start auto-change"
+        self.msg_stop = "Stop all"
+        self.msg_sound = "Dźwięk"
         self.msg_pause = "Pauza"
         self.msg_search = "Szukaj"
         self.msg_random = "Losowa"
@@ -230,10 +244,11 @@ class Polish:
         self.msg_changefolder = "Folder"
         self.msg_choosefolder = "Proszę wybrać folder"
         self.msg_caching = "Buforowanie tapet..."
+        self.msg_show_path_in_tooltip = "Show path in tooltip"
 
         self.msg_help = "Skróty klawiszowe Waypaper'a:\n\nhjkl - Nawigacja (←↓↑→)\nEnter - Ustaw wybraną tapetę\nf - Zmień folder tapet\n"
         self.msg_help += "g - Przewiń na górę\nG - Przewiń na dół\nR - Ustaw losową tapetę\nr - Jeszcze raz buferuj tapety\n"
-        self.msg_help += ". - Pokaż/ukryj ukryte tapety\ns - Włącz/wyłącz tapety w podfolderach\n? - Pomoc\nq - Wyjście\n\n"
+        self.msg_help += ". - Pokaż/ukryj ukryte tapety\ns - Włącz/wyłącz tapety w podfolderach\n/ - Szukanie\n? - Pomoc\nq - Wyjście\n\n"
         self.msg_help += self.msg_info
 
         self.err_cache = "Błąd w usuwaniu bufera"
@@ -257,6 +272,8 @@ class Polish:
         self.tip_mpv_stop = "Zatrzymaj wszystkie procesy mpv"
         self.tip_mpv_pause = "Odtwarzaj/Zatrzymaj animowaną"
         self.tip_mpv_sound = "Play sound of the video"
+        self.tip_timer = "How often to automatically change wallpaper"
+        self.tip_start = "Initiate automatic change of wallpaper after a time interval"
 
 class Russian:
     def __init__(self):
@@ -268,18 +285,19 @@ class Russian:
         self.msg_arg_rest = "восстановить последние обои"
         self.msg_arg_back = "указать бэкенд для установки обоев"
         self.msg_arg_rand = "установить случайные обои"
-        self.msg_arg_list = "вывести обои и мотиноры в формате json"
+        self.msg_arg_list = "вывести различные параметры в формате json"
         self.msg_arg_wall = "указать путь к изображению"
         self.msg_arg_folder = "указать путь к папке с обоями"
         self.msg_arg_statefile = "указать путь к файлу состояния"
         self.msg_arg_monitor = "указать имя монитора для которого устанавливаются обои"
         self.msg_arg_post = "предотвратить выполнение post_command"
+        self.msg_arg_show_path_in_tooltip = "показывать относительный путь в подсказке"
 
-        self.msg_path = "Выбранный путь к изображению:"
         self.msg_select = "Выбрать"
         self.msg_refresh = "Обновить"
         self.msg_random = "Случайно"
         self.msg_clear = "Очистить"
+        self.msg_start = "Начать авто-смену"
         self.msg_stop = "Стоп"
         self.msg_sound = "Звук"
         self.msg_pause = "Пауза"
@@ -294,10 +312,11 @@ class Russian:
         self.msg_changefolder = "Папка"
         self.msg_choosefolder = "Пожалуйста, выберите папку"
         self.msg_caching = "Кэширование обоев..."
+        self.msg_show_path_in_tooltip = "Показыват путь в подсказке"
 
         self.msg_help = "Горячие клавиши Waypaper:\n\nhjkl - Навигация (←↓↑→)\nf - Изменить папку с обоями\n"
         self.msg_help += "g - Прокрутка в начало\nG - Прокрутка в конец\nR - Установить случайные обои\nr - Обновить кэш обоев\n"
-        self.msg_help += ". - Показать/скрыть скрытые файлы \ns - Показать/скрыть вложенные папки\n? - Справка\nq - Выход\n\n"
+        self.msg_help += ". - Показать/скрыть скрытые файлы \ns - Показать/скрыть вложенные папки\n/ - Поиск\n? - Справка\nq - Выход\n\n"
         self.msg_help += self.msg_info
 
         self.err_cache = "Ошибка при удалении кэша"
@@ -320,6 +339,8 @@ class Russian:
         self.tip_mpv_stop = "Остановить все mpv процессы"
         self.tip_mpv_pause = "Плей/пауза видео-обоев"
         self.tip_mpv_sound = "Проигрывать звук видео-обоев"
+        self.tip_timer = "Как часто автоматически менять обои"
+        self.tip_start = "Initiate automatic change of wallpaper after a time interval"
 
 
 class Belarusian:
@@ -337,15 +358,16 @@ class Belarusian:
         self.msg_arg_folder = "ўкажыце, які тэчку сканаваць для выявы"
         self.msg_arg_statefile = "ўкажыце карыстацкі файл для захавання стану прыкладання"
         self.msg_arg_monitor = "określ żądany monitor, używając jego nazwy"
-        self.msg_arg_post = "prevents ruuning post_command"
+        self.msg_arg_post = "prevents running post_command set in config"
+        self.msg_arg_show_path_in_tooltip = "show the relative path in the tooltip"
 
-        self.msg_path = "Абраны шлях да выявы:"
         self.msg_select = "Выбраць"
         self.msg_refresh = "Абнавіць"
         self.msg_random = "Выпадкова"
         self.msg_clear = "Ачысціць"
+        self.msg_start = "Start auto-change"
         self.msg_stop = "Стоп"
-        self.msg_sound = "Sound"
+        self.msg_sound = "Звук"
         self.msg_pause = "Паўза"
         self.msg_search = "Шукаць"
         self.msg_options = "Опцыі"
@@ -358,10 +380,11 @@ class Belarusian:
         self.msg_changefolder = "Тэчка"
         self.msg_choosefolder = "Калі ласка, абярыце тэчку"
         self.msg_caching = "Кэшаванне шпалер..."
+        self.msg_show_path_in_tooltip = "Show path in tooltip"
 
         self.msg_help = "Гарачыя клавішы Waypaper:\n\nhjkl - Навігацыя (←↓↑→)\nf - Змяніць тэчку са шпалерамі\n"
         self.msg_help += "g - Пракрутка ў пачатак\nG - Пракрутка ў канец\nR - Усталяваць выпадковыя шпалеры\nr - Абнавіць кэш шпалер\n"
-        self.msg_help += ". - Паказаць/схаваць схаваныя файлы \ns - Паказаць/схаваць укладзеныя тэчкі\n? - Даведка\nq - Вынахад\n\n"
+        self.msg_help += ". - Паказаць/схаваць схаваныя файлы \ns - Паказаць/схаваць укладзеныя тэчкі\n/ - Пошук\n? - Даведка\nq - Вынахад\n\n"
         self.msg_help += self.msg_info
 
         self.err_cache = "Памылка пры выдаленні кэша"
@@ -384,6 +407,8 @@ class Belarusian:
         self.tip_mpv_stop = "Спыніць усе працэсы mpv"
         self.tip_mpv_pause = "Паўза відэа-абояў"
         self.tip_mpv_sound = "Play sound of the video"
+        self.tip_timer = "How often to automatically change wallpaper"
+        self.tip_start = "Initiate automatic change of wallpaper after a time interval"
 
 
 class Chinese:
@@ -401,13 +426,14 @@ class Chinese:
         self.msg_arg_folder = "指定扫描壁纸的文件夹"
         self.msg_arg_statefile = "指定用于存储应用程序状态的自定义文件"
         self.msg_arg_monitor = "通过其名称指定所需的显示器"
-        self.msg_arg_post = "prevents ruuning post_command"
+        self.msg_arg_post = "prevents running post_command set in config"
+        self.msg_arg_show_path_in_tooltip = "show the relative path in the tooltip"
 
-        self.msg_path = "选择的图像路径："
         self.msg_select = "选择"
         self.msg_refresh = "刷新"
         self.msg_random = "随机"
         self.msg_clear = "清除"
+        self.msg_start = "Start auto-change"
         self.msg_stop = "停止"
         self.msg_sound = "Sound"
         self.msg_pause = "暂停"
@@ -422,10 +448,11 @@ class Chinese:
         self.msg_changefolder = "文件夹"
         self.msg_choosefolder = "请选择一个文件夹"
         self.msg_caching = "缓存壁纸..."
+        self.msg_show_path_in_tooltip = "Show path in tooltip"
 
         self.msg_help = "Waypaper 的热键：\n\nhjkl -导航 (←↓↑→)\nf -更改壁纸文件夹\n"
         self.msg_help += "g -滚动到顶部\nG -滚动到底部\nR -设置随机壁纸\nr -重新缓存壁纸\n"
-        self.msg_help += ". - 包括/排除隐藏图像\ns -包含/排除子文件夹中的图像\n？ -帮助\nq -退出\n\n"
+        self.msg_help += ". - 包括/排除隐藏图像\ns -包含/排除子文件夹中的图像\n/ - Search\n？ -帮助\nq -退出\n\n"
         self.msg_help += self.msg_info
 
         self.err_cache = "删除缓存时出错"
@@ -448,6 +475,76 @@ class Chinese:
         self.tip_mpv_stop = "停止所有 mpv 进程"
         self.tip_mpv_pause = "暂停视频壁纸"
         self.tip_mpv_sound = "Play sound of the video"
+        self.tip_timer = "How often to automatically change wallpaper"
+        self.tip_start = "Initiate automatic change of wallpaper after a time interval"
+
+class TraditionalChinese:
+    def __init__(self):
+        self.msg_desc = "Wayland 和 X11 的 GUI 壁紙選擇器。是能作為 feh、swaybg、wallutils、hyprpaper、mpvpaper 和 swww 的前端。"
+        self.msg_info = "如要更多資訊, 請前往:\nhttps://github.com/anufrievroman/waypaper"
+
+        self.msg_arg_help = "版本"
+        self.msg_arg_fill = "壁紙填滿螢幕的方式"
+        self.msg_arg_rest = "重回上一個壁紙"
+        self.msg_arg_back = "選擇壁紙後端"
+        self.msg_arg_rand = "隨機壁紙"
+        self.msg_arg_list = "以 JSON 的格式列出壁紙及輸出到標準輪出"
+        self.msg_arg_wall = "使用選擇了的壁紙"
+        self.msg_arg_folder = "存有壁紙的文件夾"
+        self.msg_arg_statefile = "指定用於儲存程式狀態的自定文件"
+        self.msg_arg_monitor = "用螢幕的名稱來選擇壁紙在那一個螢幕顯示"
+        self.msg_arg_post = "停止更換壁紙後運行的命令"
+        self.msg_arg_show_path_in_tooltip = "show the relative path in the tooltip"
+
+        self.msg_select = "選擇"
+        self.msg_refresh = "刷新"
+        self.msg_clear = "清除搜尋"
+        self.msg_start = "開始自動更換"
+        self.msg_stop = "停止"
+        self.msg_sound = "聲音開關"
+        self.msg_pause = "暫停"
+        self.msg_search = "搜尋"
+        self.msg_random = "隨機"
+        self.msg_exit = "退出"
+        self.msg_options = "設定"
+        self.msg_subfolders = "顯示子文件夾的圖片"
+        self.msg_all_subfolders = "顯示所有子文件夾的圖片"
+        self.msg_hidden = "顯示隱藏子的圖片"
+        self.msg_gifs = "只顯示 GIF 圖"
+        self.msg_transitions = "顯示翻譯設定"
+        self.msg_changefolder = "文件夾"
+        self.msg_choosefolder = "選擇文件夾"
+        self.msg_caching = "緩存壁紙"
+        self.msg_show_path_in_tooltip = "Show path in tooltip"
+
+        self.msg_help = "Waypaper 的快捷鍵:\n\nhjkl - 行動 (←↓↑→)\nEnter - 設定選擇壁紙\nf - 選擇壁紙文件夾\n"
+        self.msg_help += "g - 滾動到頂部\nG - 滾動到底部\nR - 隨機壁紙\nr - 重新玩全壁紙\n"
+        self.msg_help += ". - 顯示隱藏的圖片\ns - 顯示在子文件夾的圖片\n/ - Search\n? - 協助\nq - 退出\n\n"
+        self.msg_help += self.msg_info
+
+        self.err_cache = "刪除緩存時出錯"
+        self.err_backend = "沒有安裝任何壁紙後端.\n"
+        self.err_backend += "請使用包裝管理器安裝至少一個後端:\n\n"
+        self.err_backend += "- swaybg (Wayland)\n- swww (Wayland)\n"
+        self.err_backend += "- hyprpaper (Wayland)\n- feh (Xorg)\n"
+        self.err_backend += "- wallutils (Xorg & Wayland)\n- mpvpaper (Xorg & Wayland)\n\n"
+        self.err_backend += self.msg_info
+
+        self.tip_refresh = "重新緩存在文件夾中的圖片"
+        self.tip_fill = "選擇壁紙填滿方式"
+        self.tip_backend = "選擇後端"
+        self.tip_sorting = "選擇排序方式"
+        self.tip_display = "選擇螢幕"
+        self.tip_color = "選擇背景顏色"
+        self.tip_random = "隨機壁紙"
+        self.tip_exit = "退出程式"
+        self.tip_transition = "選擇過渡方式"
+        self.tip_mpv_stop = "暫停所有 mpv 程序"
+        self.tip_mpv_pause = "開始/暫停影片壁紙播放"
+        self.tip_mpv_sound = "播放影片聲音"
+        self.tip_timer = "自動選擇壁紙的時間"
+        self.tip_start = "開始定時更換壁紙"
+
 
 class Spanish:
     def __init__(self):
@@ -464,13 +561,14 @@ class Spanish:
         self.msg_arg_folder = "specify which folder to scan for wallpapers"
         self.msg_arg_statefile = "specify a custom file to store the application state"
         self.msg_arg_monitor = "especifique el monitor deseado usando su nombre"
-        self.msg_arg_post = "prevents ruuning post_command"
+        self.msg_arg_post = "prevents running post_command set in config"
+        self.msg_arg_show_path_in_tooltip = "show the relative path in the tooltip"
 
-        self.msg_path = "Ubicación de la imagen:"
         self.msg_select = "Selecciona"
         self.msg_refresh = "Actualizar"
         self.msg_random = "Aleatorio"
         self.msg_clear = "Borrar"
+        self.msg_start = "Start auto-change"
         self.msg_stop = "Detener"
         self.msg_sound = "Sound"
         self.msg_pause = "Pausa"
@@ -485,10 +583,11 @@ class Spanish:
         self.msg_changefolder = "Carpeta"
         self.msg_choosefolder = "Por favor, selecciona una carpeta"
         self.msg_caching = "Almacenando en el caché..."
+        self.msg_show_path_in_tooltip = "Show path in tooltip"
 
         self.msg_help = 'Controles para usar "Waypaper":\n\nhjkl - Navegación (←↓↑→)\n"Enter" (⏎) - Actualizar imagen de fondo a la imágen seleccionada\nf - Cambiar carpeta de imágenes\n'
         self.msg_help += "g - Ir a la parte de arriba\nG - Ir a la parte de abajo\nR - Cambiar imagen de fondo a una imágen aleatoria\nr - Recrear caché de imágenes\n"
-        self.msg_help += ". - Ver/Omitir archivos ocultos\ns - Ver/Omitir imágenes en subcarpetas\n? - Ayuda\nq - Cerrar aplicación\n\n"
+        self.msg_help += ". - Ver/Omitir archivos ocultos\ns - Ver/Omitir imágenes en subcarpetas\n/ - Search\n? - Ayuda\nq - Cerrar aplicación\n\n"
         self.msg_help += self.msg_info
 
         self.err_cache = "Error borrando el caché"
@@ -511,6 +610,8 @@ class Spanish:
         self.tip_mpv_stop = "Detener todos los procesos de mpv"
         self.tip_mpv_pause = "Pausar fondo de pantalla de video"
         self.tip_mpv_sound = "Play sound of the video"
+        self.tip_timer = "How often to automatically change wallpaper"
+        self.tip_start = "Initiate automatic change of wallpaper after a time interval"
 
 
 def load_language(lang):
@@ -527,6 +628,8 @@ def load_language(lang):
         txt = Polish()
     elif lang == "zh":
         txt = Chinese()
+    elif lang == "zh_HK":
+        txt = TraditionalChinese()
     elif lang == "es":
         txt = Spanish()
     else:

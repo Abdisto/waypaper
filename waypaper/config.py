@@ -6,7 +6,6 @@ from argparse import Namespace
 from typing import List
 from platformdirs import user_config_path, user_pictures_path, user_cache_path, user_state_path
 
-from waypaper.aboutdata import AboutData
 from waypaper.options import FILL_OPTIONS, SORT_OPTIONS, SWWW_TRANSITION_TYPES, BACKEND_OPTIONS
 from waypaper.common import check_installed_backends
 
@@ -15,8 +14,10 @@ class Config:
     """User configuration loaded from the config.ini file"""
     def __init__(self):
         # All paths (folders or wallpapers) are Path objects
+        self.name = "waypaper"
         self.home_path = pathlib.Path.home()
-        self.image_folder = user_pictures_path()
+        self.image_folder_list: list[pathlib.Path] = []
+        self.image_folder_fallback: str = str(user_pictures_path())
         self.installed_backends = check_installed_backends()
         self.selected_wallpaper = None
         self.selected_monitor = "All"
@@ -31,6 +32,7 @@ class Config:
         self.swww_transition_duration = 2
         self.swww_transition_fps = 60
         self.mpvpaper_sound = False
+        self.mpvpaper_options = ""
         self.lang = "en"
         self.monitors = [self.selected_monitor]
         self.wallpapers = []
@@ -39,15 +41,14 @@ class Config:
         self.include_all_subfolders = False
         self.show_hidden = False
         self.show_gifs_only = False
-        self.show_transition_options = True
-        self.about = AboutData()
-        self.cache_dir = user_cache_path(self.about.applicationName())
-        self.config_dir = user_config_path(self.about.applicationName())
+        self.cache_dir = user_cache_path(self.name)
+        self.config_dir = user_config_path(self.name)
         self.config_file = self.config_dir / "config.ini"
-        self.state_dir = user_state_path(self.about.applicationName())
+        self.state_dir = user_state_path(self.name)
         self.state_file = self.state_dir / "state.ini"
         self.use_xdg_state = False
         self.use_post_command = True
+        self.show_path_in_tooltip = True
 
         # Create config and cache folders:
         self.config_dir.mkdir(parents=True, exist_ok=True)
@@ -67,9 +68,10 @@ class Config:
         else:
             return ''
 
-    def shortened_paths(self, paths: List[pathlib.Path]) -> str:
-        """Prepare a list of paths to be serialized as a comma separated string"""
-        return ','.join(self.shorten_path(p) for p in paths)
+    def get_image_folder_list(self, section: str, config) -> list[pathlib.Path]:
+        image_folders_str: list[str] =  config.get(section, "folder", fallback = self.image_folder_fallback).split("\n")
+        image_folder_list = [pathlib.Path(path_str).expanduser() for path_str in image_folders_str]
+        return image_folder_list
 
     def read(self) -> None:
         """Load data from the config.ini or use default if it does not exists"""
@@ -88,30 +90,25 @@ class Config:
         self.swww_transition_duration = config.get("Settings", "swww_transition_duration", fallback=self.swww_transition_duration)
         self.swww_transition_fps = config.get("Settings", "swww_transition_fps", fallback=self.swww_transition_fps)
         self.mpvpaper_sound = config.getboolean("Settings", "mpvpaper_sound", fallback=self.mpvpaper_sound)
+        self.mpvpaper_options = config.get("Settings", "mpvpaper_options", fallback=self.mpvpaper_options)
+        self.number_of_columns = int(config.get("Settings", "number_of_columns", fallback=self.number_of_columns))
         self.lang = config.get("Settings", "language", fallback=self.lang)
         self.include_subfolders = config.getboolean("Settings", "subfolders", fallback=self.include_subfolders)
         self.include_all_subfolders = config.getboolean("Settings", "all_subfolders", fallback=self.include_all_subfolders)
-        self.show_transition_options = config.getboolean("Settings", "show_transition_options", fallback=self.show_transition_options)
         self.show_hidden = config.getboolean("Settings", "show_hidden", fallback=self.show_hidden)
         self.show_gifs_only = config.getboolean("Settings", "show_gifs_only", fallback=self.show_gifs_only)
         self.use_xdg_state = config.getboolean("Settings", "use_xdg_state", fallback=self.use_xdg_state)
+        self.show_path_in_tooltip = config.getboolean("Settings", "show_path_in_tooltip", fallback=self.show_path_in_tooltip)
 
         # Read and convert strings representing lists and paths:
-        image_folder_str = config.get("Settings", "folder", fallback=self.image_folder)
         monitors_str = config.get("Settings", "monitors", fallback=self.selected_monitor, raw=True)
         wallpapers_str = config.get("Settings", "wallpaper", fallback="", raw=True)
-        self.image_folder = pathlib.Path(image_folder_str).expanduser()
+        self.image_folder_list = self.get_image_folder_list("Settings", config)
         if monitors_str:
             self.monitors = [str(monitor) for monitor in monitors_str.split(",")]
         if wallpapers_str:
             self.wallpapers = [pathlib.Path(paper).expanduser() for paper in wallpapers_str.split(",")]
 
-        # Read and check the validity of the number of columns:
-        try:
-            self.number_of_columns = config.getint("Settings", "number_of_columns", fallback=self.number_of_columns)
-            self.number_of_columns = int(self.number_of_columns) if int(self.number_of_columns) > 0 else 3
-        except Exception:
-            self.number_of_columns = 3
 
     def read_state(self) -> None:
         """Load data from the state.ini file"""
@@ -122,10 +119,9 @@ class Config:
         state.read(self.state_file, 'utf-8')
 
         # Read and convert strings representing lists and paths:
-        image_folder_str = state.get("State", "folder", fallback=self.image_folder)
         monitors_str = state.get("State", "monitors", fallback=self.selected_monitor, raw=True)
         wallpapers_str = state.get("State", "wallpaper", fallback="", raw=True)
-        self.image_folder = pathlib.Path(image_folder_str).expanduser()
+        self.image_folder_list = self.get_image_folder_list("State", state)
         if monitors_str:
             self.monitors = [str(monitor) for monitor in monitors_str.split(",")]
             self.selected_monitor = self.monitors[0]
@@ -145,12 +141,8 @@ class Config:
             self.fill_option = FILL_OPTIONS[0]
         if self.swww_transition_type not in SWWW_TRANSITION_TYPES:
             self.swww_transition_type = "any"
-
-        # Check the validity of the number of columns:
-        try:
-            self.number_of_columns = int(self.number_of_columns) if int(self.number_of_columns) > 0 else 3
-        except Exception:
-            self.number_of_columns = 3
+        if self.number_of_columns <= 0:
+            self.number_of_columns = 1
 
         # Check validity of other swww options:
         if 0 > int(self.swww_transition_angle) > 180:
@@ -187,14 +179,24 @@ class Config:
         state.read(self.state_file)
         if not state.has_section("State"):
             state.add_section("State")
-        state.set("State", "folder", self.shorten_path(self.image_folder))
+        self.write_folder_list_to_config("State", state)
         state.set("State", "monitors", ",".join(self.monitors))
-        state.set("State", "wallpaper", self.shortened_paths(self.wallpapers))
+        state.set("State", "wallpaper", ','.join(self.shorten_path(p) for p in self.wallpapers))
         try:
             with open(self.state_file, "w") as statefile:
                 state.write(statefile)
         except PermissionError:
             print("Could not save state file due to permission error.")
+
+    def write_folder_list_to_config(self, section: str, config):
+        config_save_folder_str = ""
+        for i, folder in enumerate(self.image_folder_list):
+            if i == 0:
+                config_save_folder_str += self.shorten_path(folder)
+            else:
+                config_save_folder_str += "\n     " + self.shorten_path(folder)
+        config.set(section, "folder", config_save_folder_str)
+
 
     def save(self, only_state=False) -> None:
         """Save current parameters to the configuration file"""
@@ -208,11 +210,12 @@ class Config:
 
         # If state file is used, some parameters are not save into config:
         if not self.use_xdg_state:
-            config.set("Settings", "folder", self.shorten_path(self.image_folder))
+            self.write_folder_list_to_config("Settings", config)
             config.set("Settings", "monitors", ",".join(self.monitors))
-            config.set("Settings", "wallpaper", self.shortened_paths(self.wallpapers))
+            config.set("Settings", "wallpaper", ','.join(self.shorten_path(p) for p in self.wallpapers))
 
         # Save the parameters into config:
+        config.set("Settings", "show_path_in_tooltip", str(self.show_path_in_tooltip))
         config.set("Settings", "backend", self.backend)
         config.set("Settings", "fill", self.fill_option)
         config.set("Settings", "sort", self.sort_option)
@@ -221,7 +224,6 @@ class Config:
         config.set("Settings", "all_subfolders", str(self.include_all_subfolders))
         config.set("Settings", "show_hidden", str(self.show_hidden))
         config.set("Settings", "show_gifs_only", str(self.show_gifs_only))
-        config.set("Settings", "show_transition_options", str(self.show_transition_options))
         config.set("Settings", "post_command", self.post_command)
         config.set("Settings", "number_of_columns", str(self.number_of_columns))
         config.set("Settings", "swww_transition_type", str(self.swww_transition_type))
@@ -230,6 +232,7 @@ class Config:
         config.set("Settings", "swww_transition_duration", str(self.swww_transition_duration))
         config.set("Settings", "swww_transition_fps", str(self.swww_transition_fps))
         config.set("Settings", "mpvpaper_sound", str(self.mpvpaper_sound))
+        config.set("Settings", "mpvpaper_options", str(self.mpvpaper_options))
         config.set("Settings", "use_xdg_state", str(self.use_xdg_state))
 
         try:
@@ -252,7 +255,7 @@ class Config:
         if args.fill:
             self.fill_option = args.fill
         if args.folder:
-            self.image_folder = pathlib.Path(args.folder).expanduser()
+            self.image_folder_list = [pathlib.Path(path_str) for path_str in args.folder]
         if args.state_file:
             self.use_xdg_state = True # Use of a custom state file implies state is in a separate file, requires use_xdg_state
             self.state_file = pathlib.Path(args.state_file).expanduser()
