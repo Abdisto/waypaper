@@ -37,7 +37,6 @@
           pkgs.killall
           pkgs.gtk3
           pkgs.python3Packages.pygobject3
-          pkgs.python3Packages.importlib-metadata
           pkgs.python3Packages.imageio
           pkgs.python3Packages.pillow
           pkgs.python3Packages.imageio-ffmpeg
