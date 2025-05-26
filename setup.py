@@ -1,7 +1,12 @@
-from pathlib import Path
 import setuptools
+import re
+from pathlib import Path
 
 setup_dir = Path(__file__).resolve().parent
+version = re.search( r'__version__ = "(.*)"', Path(setup_dir, 'waypaper/__main__.py').open().read())
+if version is None:
+    raise SystemExit("Could not determine version to use")
+version = version.group(1)
 
 setuptools.setup(
     name='waypaper',
@@ -17,8 +22,8 @@ setuptools.setup(
             "waypaper = waypaper.__main__:run"
         ]
     },
-    install_requires=["PyGObject", "importlib_metadata", "platformdirs", "Pillow", "imageio", "imageio-ffmpeg", "screeninfo"],
-    version='2.4',
+    install_requires=["PyGObject", "platformdirs", "Pillow", "imageio", "imageio-ffmpeg", "screeninfo"],
+    version=version,
     python_requires='>3.10',
     classifiers=[
         "Development Status :: 4 - Beta",

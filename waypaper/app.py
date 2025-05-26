@@ -3,62 +3,20 @@
 import threading
 import subprocess
 import os
-import time
 import gi
 import shutil
 import imageio
 import screeninfo
 from pathlib import Path
-from PIL import Image
 
-from waypaper.aboutdata import AboutData
 from waypaper.changer import change_wallpaper
 from waypaper.config import Config
-from waypaper.common import get_image_paths, get_random_file
+from waypaper.common import get_image_paths, get_image_name, get_random_file, cache_image
 from waypaper.options import FILL_OPTIONS, SORT_OPTIONS, SORT_DISPLAYS, VIDEO_EXTENSIONS , SWWW_TRANSITION_TYPES
 from waypaper.translations import Chinese, English, French, German, Polish, Russian, Belarusian, Spanish
 
 gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk, GdkPixbuf, Gdk, GLib
-
-
-def cache_image(image_path: str, cache_dir: Path) -> None:
-    """Resize and cache images using various libraries depending on the file type"""
-    ext = os.path.splitext(image_path)[1].lower()
-    cache_file = cache_dir / Path(os.path.basename(image_path))
-    width = 240
-    try:
-        # If it's a video, extract the first frame:
-        if ext in VIDEO_EXTENSIONS:
-            reader = imageio.get_reader(image_path)
-            first_frame = reader.get_data(0)
-            # Convert the numpy array to a PIL image:
-            pil_image = Image.fromarray(first_frame)
-            aspect_ratio = pil_image.height / pil_image.width
-            new_height = int(width * aspect_ratio)
-            resized_image = pil_image.resize((width, new_height))
-            resized_image.save(str(cache_file), "JPEG")
-            return
-
-        # If it's an image, create preview depending on the filetype
-        if ext == ".webp":
-            img = Image.open(image_path)
-            data = img.tobytes()
-            img_width, img_height = img.size
-            pixbuf = GdkPixbuf.Pixbuf.new_from_data(data, GdkPixbuf.Colorspace.RGB, False, 8, img_width, img_height, img_width * 3)
-        else:
-            pixbuf = GdkPixbuf.Pixbuf.new_from_file(str(image_path))
-        aspect_ratio = pixbuf.get_width() / pixbuf.get_height()
-        height = int(width / aspect_ratio)
-        scaled_pixbuf = pixbuf.scale_simple(width, height, GdkPixbuf.InterpType.BILINEAR)
-        scaled_pixbuf.savev(str(cache_file), "jpeg", [], [])
-
-    # If image processing failed, create a black placeholder:
-    except Exception:
-        print(f"Could not generate preview for {os.path.basename(image_path)}")
-        black_pixbuf = GdkPixbuf.Pixbuf.new(GdkPixbuf.Colorspace.RGB, True, 8, width, width*9/16)
-        black_pixbuf.fill(0x0)
-        black_pixbuf.savev(str(cache_file), "jpeg", [], [])
 
 
 class App(Gtk.Window):
@@ -67,20 +25,20 @@ class App(Gtk.Window):
     def __init__(self, txt: Chinese|English|French|German|Polish|Russian|Belarusian|Spanish, cf: Config) -> None:
         super().__init__(title="Waypaper")
         self.cf = cf
-        self.about = AboutData()
         self.txt = txt
         self.check_backends()
         self.set_default_size(820, 600)
         self.connect("delete-event", Gtk.main_quit)
         self.selected_index = 0
         self.highlighted_image_row = 0
+        self.is_enering_text = False
+        self.number_of_resize = 0
         self.init_ui()
-        self.backend_option_combo.grab_focus()
-        self.search_state = False
-        self.depth = -1 if self.cf.include_all_subfolders else 1
+        self.main_box.grab_focus()
 
         # Start the image processing in a separate thread:
         threading.Thread(target=self.process_images).start()
+
 
     def init_ui(self) -> None:
         """Initialize the UI elements of the application"""
@@ -88,6 +46,20 @@ class App(Gtk.Window):
         # Create a vertical box for general app layout:
         self.main_box = Gtk.VBox(spacing=10)
         self.add(self.main_box)
+
+        # Load and apply CSS
+        css_provider = Gtk.CssProvider()
+        css = b"""
+        .highlighted-button {
+            border: 1px solid @theme_selected_bg_color;
+        }
+        """
+        css_provider.load_from_data(css)
+
+        # Apply CSS to the default screen
+        screen = Gdk.Screen.get_default()
+        context = Gtk.StyleContext()
+        context.add_provider_for_screen(screen, css_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
 
         # TOP MENU
 
@@ -157,20 +129,22 @@ class App(Gtk.Window):
 
         # MIDDLE GRID
 
-        # Create an alignment container to place the grid in the top-right corner:
-        self.grid_alignment = Gtk.Alignment(xalign=1, yalign=0.0, xscale=0.5, yscale=1)
-        self.main_box.pack_start(self.grid_alignment, True, True, 0)
-
         # Create a scrolled window for the grid of images:
         self.scrolled_window = Gtk.ScrolledWindow()
-        self.scrolled_window.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
-        self.grid_alignment.add(self.scrolled_window)
+        self.scrolled_window.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
+
+        # Create a box to center the grid:
+        self.center_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+        self.center_box.set_valign(Gtk.Align.CENTER)
+        self.center_box.set_halign(Gtk.Align.CENTER)
+        self.main_box.add(self.scrolled_window)
 
         # Create a grid layout for images:
         self.grid = Gtk.Grid()
         self.grid.set_row_spacing(0)
         self.grid.set_column_spacing(0)
-        self.scrolled_window.add(self.grid)
+        self.center_box.add(self.grid)
+        self.scrolled_window.add(self.center_box)
 
         # BACKEND MENU
 
@@ -254,21 +228,29 @@ class App(Gtk.Window):
         self.swww_angle_entry = Gtk.Entry()
         self.swww_angle_entry.set_width_chars(5)
         self.swww_angle_entry.set_placeholder_text("angle")
+        self.swww_angle_entry.connect("focus-in-event", self.on_focus_in)
+        self.swww_angle_entry.connect("focus-out-event", self.on_focus_out)
 
         #  Get steps for animation
         self.swww_steps_entry = Gtk.Entry()
         self.swww_steps_entry.set_width_chars(5)
         self.swww_steps_entry.set_placeholder_text("steps")
+        self.swww_steps_entry.connect("focus-in-event", self.on_focus_in)
+        self.swww_steps_entry.connect("focus-out-event", self.on_focus_out)
 
         #  Get duration for animation
         self.swww_duration_entry = Gtk.Entry()
         self.swww_duration_entry.set_width_chars(7)
         self.swww_duration_entry.set_placeholder_text("duration")
+        self.swww_duration_entry.connect("focus-in-event", self.on_focus_in)
+        self.swww_duration_entry.connect("focus-out-event", self.on_focus_out)
 
         #  Get fps for animation
         self.swww_fps_entry = Gtk.Entry()
         self.swww_fps_entry.set_width_chars(5)
         self.swww_fps_entry.set_placeholder_text("fps")
+        self.swww_fps_entry.connect("focus-in-event", self.on_focus_in)
+        self.swww_fps_entry.connect("focus-out-event", self.on_focus_out)
 
         # Add different buttons depending on backend:
         self.monitor_option_display()
@@ -279,6 +261,12 @@ class App(Gtk.Window):
 
         # Connect the key press events to various actions:
         self.connect("key-press-event", self.on_key_pressed)
+
+        self.connect("button-press-event", self.on_window_clicked)
+
+        # Connect window resizing events to change the number of columns.
+        # self.connect("size-allocate", self.on_window_resize)
+
         self.show_all()
 
 
@@ -293,17 +281,16 @@ class App(Gtk.Window):
         self.menu.append(self.filter_gifs_checkbox)
 
         # Create subfolder toggle:
-        if not self.cf.include_all_subfolders:
-            self.include_subfolders_checkbox = Gtk.CheckMenuItem(label=self.txt.msg_subfolders)
-            self.include_subfolders_checkbox.set_active(self.cf.include_subfolders)
-            self.include_subfolders_checkbox.connect("toggled", self.on_include_subfolders_toggled)
-            self.menu.append(self.include_subfolders_checkbox)
+        self.include_subfolders_checkbox = Gtk.CheckMenuItem(label=self.txt.msg_subfolders)
+        self.include_subfolders_checkbox.set_active(self.cf.include_subfolders)
+        self.include_subfolders_checkbox.connect("toggled", self.on_include_subfolders_toggled)
+        self.menu.append(self.include_subfolders_checkbox)
 
-        self.all_subfolders_checkbox = Gtk.CheckMenuItem(label=self.txt.msg_all_subfolders)
-        self.all_subfolders_checkbox.set_active(self.cf.include_all_subfolders)
-        self.all_subfolders_checkbox.connect("toggled",self.on_all_subfolders_toggle)
-        self.menu.append(self.all_subfolders_checkbox)
-
+        # Create all subfolder toggle:
+        self.include_all_subfolders_checkbox = Gtk.CheckMenuItem(label=self.txt.msg_all_subfolders)
+        self.include_all_subfolders_checkbox.set_active(self.cf.include_all_subfolders)
+        self.include_all_subfolders_checkbox.connect("toggled", self.on_include_all_subfolders_toggled)
+        self.menu.append(self.include_all_subfolders_checkbox)
 
         # Create hidden toggle:
         self.include_hidden_checkbox = Gtk.CheckMenuItem(label=self.txt.msg_hidden)
@@ -311,14 +298,20 @@ class App(Gtk.Window):
         self.include_hidden_checkbox.connect("toggled", self.on_hidden_files_toggled)
         self.menu.append(self.include_hidden_checkbox)
 
-        # Create show transition options toggle:
-        if self.cf.backend == "swww":
-            self.show_transition_options_checkbox = Gtk.CheckMenuItem(label=self.txt.msg_transitions)
-            self.show_transition_options_checkbox.set_active(self.cf.show_transition_options)
-            self.show_transition_options_checkbox.connect("toggled", self.on_show_transition_options_toggled)
-            self.menu.append(self.show_transition_options_checkbox)
+        # Create show folder path toggle:
+        self.show_path_in_tooltip_checkbox = Gtk.CheckMenuItem(label=self.txt.msg_show_path_in_tooltip)
+        self.show_path_in_tooltip_checkbox.set_active(self.cf.show_path_in_tooltip)
+        self.show_path_in_tooltip_checkbox.connect("toggled", self.on_show_path_in_tooltip_toggled)
+        self.menu.append(self.show_path_in_tooltip_checkbox)
+
+        # Create zen mode toggle:
+        self.zen_mode_checkbox = Gtk.CheckMenuItem(label=self.txt.msg_zen)
+        self.zen_mode_checkbox.set_active(self.cf.zen_mode)
+        self.zen_mode_checkbox.connect("toggled", self.on_zen_mode_toggled)
+        self.menu.append(self.zen_mode_checkbox)
 
         self.menu.show_all()
+
 
     def on_options_button_clicked(self, widget) -> None:
         '''Position the menu at the button and show it'''
@@ -353,7 +346,7 @@ class App(Gtk.Window):
         self.options_box.remove(self.swww_fps_entry)
         self.options_box.remove(self.swww_duration_entry)
 
-        if self.cf.backend != "swww" or not self.cf.show_transition_options:
+        if self.cf.backend != "swww":
             return
 
         self.swww_transitions_options = Gtk.ComboBoxText()
@@ -390,7 +383,7 @@ class App(Gtk.Window):
             self.cf.swww_transition_duration = duration
 
     def mpv_options_display(self) -> None:
-        """Show mpv options if backend is mpvpaper"""
+        """Show mpv options if backend is mpvpaper, and remove them for other backends"""
         self.options_box.remove(self.mpv_stop_button)
         self.options_box.remove(self.mpv_pause_button)
         self.options_box.remove(self.mpv_sound_toggle)
@@ -418,7 +411,7 @@ class App(Gtk.Window):
             exit()
 
     def show_message(self, message: str) -> None:
-        """If no backends are installed, show a message"""
+        """Show messages to user with ok button"""
         dialog = Gtk.MessageDialog(
             parent=self,
             flags=0,
@@ -429,30 +422,23 @@ class App(Gtk.Window):
         dialog.run()
         dialog.destroy()
 
-    def sort_images(self) -> None:
-        """Sort images depending on the sorting option"""
-        if self.cf.sort_option == "name":
-            self.image_paths.sort(key=lambda x: os.path.basename(x))
-        elif self.cf.sort_option == "namerev":
-            self.image_paths.sort(key=lambda x: os.path.basename(x), reverse=True)
-        elif self.cf.sort_option == "date":
-            self.image_paths.sort(key=lambda x: os.path.getmtime(x))
-        elif self.cf.sort_option == "daterev":
-            self.image_paths.sort(key=lambda x: os.path.getmtime(x), reverse=True)
-        else:
-            pass
 
     def process_images(self) -> None:
         """Load images from the selected folder, resize them, and arrange into a grid"""
 
-        self.image_paths = get_image_paths(self.cf.backend, str(self.cf.image_folder), self.cf.include_subfolders,
-                                           self.cf.show_hidden, self.cf.show_gifs_only, self.depth)
-        self.sort_images()
+        self.image_paths = get_image_paths(self.cf.backend, self.cf.image_folder_list, self.cf.include_subfolders,
+                                      self.cf.include_all_subfolders, self.cf.show_hidden, self.cf.show_gifs_only)
+
+        # Sort paths:
+        if self.cf.sort_option in ["name", "namerev"]:
+            self.image_paths.sort(reverse=(self.cf.sort_option == "namerev"))
+        if self.cf.sort_option in ["date", "daterev"]:
+            self.image_paths.sort(key=lambda x: os.path.getmtime(x), reverse=(self.cf.sort_option == "daterev"))
 
         # Show caching label:
         self.loading_label = Gtk.Label(label=self.txt.msg_caching)
         self.bottom_loading_box.add(self.loading_label)
-        self.show_all()
+        self.bottom_loading_box.show_all()
 
         self.thumbnails = []
         self.image_names = []
@@ -473,8 +459,8 @@ class App(Gtk.Window):
             thumbnail = GdkPixbuf.Pixbuf.new_from_file(str(cached_image_path))
             self.thumbnails.append(thumbnail)
 
-            # Create a name for each image, which contain subfolders:
-            image_name = str(Path(image_path).relative_to(self.cf.image_folder))
+            # Get image name, which may or may not include parent folders:
+            image_name = get_image_name(image_path, self.cf.image_folder_list, self.cf.show_path_in_tooltip)
             self.image_names.append(image_name)
 
         # When image processing is done, remove caching label and display the images:
@@ -526,6 +512,7 @@ class App(Gtk.Window):
             button = Gtk.Button()
             if index == self.selected_index:
                 button.set_relief(Gtk.ReliefStyle.NORMAL)
+                button.get_style_context().add_class("highlighted-button")
                 self.highlighted_image_y = current_y
             else:
                 button.set_relief(Gtk.ReliefStyle.NONE)
@@ -535,7 +522,36 @@ class App(Gtk.Window):
             self.grid.attach(button, column, row, 1, 1)
             button.connect("clicked", self.on_image_clicked, path)
 
-        self.show_all()
+        self.grid.show_all()
+        self.toggle_zen_mode()
+
+
+    def toggle_zen_mode(self):
+        """Hide or show UI elements when zen mode is enabled or disabled"""
+        if self.cf.zen_mode:
+            for widget in self.top_container:
+                widget.hide()
+            for widget in self.options_box:
+                widget.hide()
+        else:
+            for widget in self.top_container:
+                widget.show()
+            for widget in self.options_box:
+                widget.show()
+
+
+    # def on_window_resize(self, widget, allocation) -> None:
+        # """Recalculate the number of columns on window resize and repopulate the grid"""
+
+        # As frequent resize freezed the interface, so we only do it each fifth resize:
+        # self.number_of_resize += 1
+        # if self.number_of_resize < 5:
+            # return
+
+        # Calculate new number of columns and reload the grid:
+        # self.cf.number_of_columns = max(1, allocation.width // 250)
+        # GLib.idle_add(self.load_image_grid)
+        # self.number_of_resize = 0
 
 
     def scroll_to_selected_image(self) -> None:
@@ -551,7 +567,6 @@ class App(Gtk.Window):
         """Set selected image as a wallpaper and save the state"""
         self.swww_options_read()
         self.cf.select_wallpaper(path)
-        print(self.txt.msg_path, self.cf.selected_wallpaper)
         if self.cf.selected_wallpaper:
             threading.Thread(target=change_wallpaper, args=(self.cf.selected_wallpaper, self.cf, self.cf.selected_monitor)).start()
         self.cf.attribute_selected_wallpaper()
@@ -566,7 +581,7 @@ class App(Gtk.Window):
         )
         response = dialog.run()
         if response == Gtk.ResponseType.OK:
-            self.cf.image_folder = Path(dialog.get_filename())
+            self.cf.image_folder_list = [Path(dialog.get_filename())]
             threading.Thread(target=self.process_images).start()
         dialog.destroy()
 
@@ -583,6 +598,13 @@ class App(Gtk.Window):
         threading.Thread(target=self.process_images).start()
 
 
+    def on_zen_mode_toggled(self, toggle) -> None:
+        """Toggle zen mode checkbox via menu"""
+        self.show_message("You are entering Zen mode.\nPress z to return to normal mode.")
+        self.cf.zen_mode = toggle.get_active()
+        self.load_image_grid()
+
+
     def on_mpv_sound_toggled(self, toggle) -> None:
         """Toggle sound of mpv player"""
         self.cf.mpvpaper_sound = toggle.get_active()
@@ -592,7 +614,16 @@ class App(Gtk.Window):
     def on_include_subfolders_toggled(self, toggle) -> None:
         """Toggle subfolders visibility via menu"""
         self.cf.include_subfolders = toggle.get_active()
-        self.depth = 1
+        if not self.cf.include_subfolders:
+            self.cf.include_all_subfolders = False
+        threading.Thread(target=self.process_images).start()
+
+
+    def on_include_all_subfolders_toggled(self, toggle) -> None:
+        """Toggle subfolders visibility via menu"""
+        self.cf.include_all_subfolders = toggle.get_active()
+        if self.cf.include_all_subfolders:
+            self.cf.include_subfolders = True
         threading.Thread(target=self.process_images).start()
 
 
@@ -608,16 +639,15 @@ class App(Gtk.Window):
         threading.Thread(target=self.process_images).start()
 
 
-    def on_show_transition_options_toggled(self, toggle) -> None:
-        """Toggle visibility of transition menu"""
-        self.cf.show_transition_options = toggle.get_active()
-        threading.Thread(target=self.process_images).start()
-        self.swww_options_display()
-
-
     def toggle_hidden_files(self) -> None:
         """Toggle visibility of hidden files via keys"""
         self.cf.show_hidden = not self.cf.show_hidden
+        threading.Thread(target=self.process_images).start()
+
+
+    def on_show_path_in_tooltip_toggled(self, widget) -> None:
+        """Toggle show image relative path in image tooltip"""
+        self.cf.show_path_in_tooltip = not self.cf.show_path_in_tooltip
         threading.Thread(target=self.process_images).start()
 
 
@@ -632,7 +662,7 @@ class App(Gtk.Window):
 
 
     def on_sort_option_changed(self, combo) -> None:
-        """Save sort parameter whet it is changed"""
+        """Save sort parameter when it is changed"""
         selected_option = combo.get_active_text()
         selected_option_num = list(SORT_DISPLAYS.values()).index(selected_option)
         self.cf.sort_option =  list(SORT_DISPLAYS.keys())[selected_option_num]
@@ -645,20 +675,17 @@ class App(Gtk.Window):
         self.cf.selected_monitor = "All"
         self.monitor_option_display()
         self.mpv_options_display()
-        self.swww_options_display()
         self.fill_option_display()
         self.color_picker_display()
+        self.swww_options_display()
         self.show_all()
 
 
     def on_transition_option_changed(self, combo) -> None:
-        # Get the active index
+        """Update the active transition type based on the selected option"""
         active_index = combo.get_active()
-
-        # Update the active transition type based on the selected option
-        if active_index >= 0:
-            self.cf.swww_transition_type = SWWW_TRANSITION_TYPES[active_index]
-            print(f"Transition type changed to: {self.cf.swww_transition_type}")
+        self.cf.swww_transition_type = SWWW_TRANSITION_TYPES[active_index]
+        print(f"Transition type changed to: {self.cf.swww_transition_type}")
 
 
     def on_color_set(self, color_button):
@@ -699,12 +726,12 @@ class App(Gtk.Window):
 
     def set_random_wallpaper(self) -> None:
         """Choose a random image and set it as the wallpaper"""
-        new_wallpaper =  get_random_file(self.cf.backend, str(self.cf.image_folder), self.cf.include_subfolders, self.cf.cache_dir)
+        new_wallpaper =  get_random_file(self.cf.backend, self.cf.image_folder_list, self.cf.include_subfolders,
+                                         self.cf.include_all_subfolders, self.cf.cache_dir)
         if new_wallpaper:
             self.cf.select_wallpaper(new_wallpaper)
         else:
             return
-        print(self.txt.msg_path, self.cf.selected_wallpaper)
         if self.cf.selected_wallpaper:
             threading.Thread(target=change_wallpaper, args=(self.cf.selected_wallpaper, self.cf, self.cf.selected_monitor)).start()
         self.cf.attribute_selected_wallpaper()
@@ -724,13 +751,10 @@ class App(Gtk.Window):
     def on_key_pressed(self, widget, event) -> bool:
         """Process various key binding"""
 
-        # Processing keys for the search field:
-        if self.search_state == True:
+        # Processing keys for losing focus on text fields:
+        if self.is_enering_text:
             if event.keyval in [Gdk.KEY_Escape, Gdk.KEY_Return, Gdk.KEY_KP_Enter]:
-                self.search_entry.set_visible(False)
-                self.search_entry.set_visible(True)
-                self.main_box.grab_focus()
-                self.search_state = False
+                self.reset_input_fields()
             return
 
         # Processing rest of the keys:
@@ -745,6 +769,10 @@ class App(Gtk.Window):
 
         elif event.keyval in [Gdk.KEY_period]:
             self.toggle_hidden_files()
+
+        elif event.keyval in [Gdk.KEY_slash]:
+            self.search_entry.grab_focus()
+            return True
 
         elif event.keyval in [Gdk.KEY_s]:
             self.toggle_include_subfolders()
@@ -777,6 +805,10 @@ class App(Gtk.Window):
             self.load_image_grid()
             self.scroll_to_selected_image()
 
+        elif event.keyval == Gdk.KEY_z:
+            self.cf.zen_mode = not self.cf.zen_mode
+            self.load_image_grid()
+
         elif event.keyval == Gdk.KEY_G:
             self.selected_index = len(self.image_paths) - 1
             self.load_image_grid()
@@ -794,7 +826,7 @@ class App(Gtk.Window):
         return event.keyval in [Gdk.KEY_Up, Gdk.KEY_Down, Gdk.KEY_Left, Gdk.KEY_Right, Gdk.KEY_Return, Gdk.KEY_KP_Enter, Gdk.KEY_period]
 
 
-    def on_search_entry_changed(self,entry, event= None):
+    def on_search_entry_changed(self, entry, event=None):
         """This function is triggered when the user types in the search field"""
         self.load_image_grid()
 
@@ -803,23 +835,45 @@ class App(Gtk.Window):
         self.main_box.grab_focus()
 
     def on_focus_in(self, widget, event):
-        self.search_state = True
+        self.is_enering_text = True
 
     def on_focus_out(self, widget, event):
-        self.search_state = False
+        self.is_enering_text = False
 
-    def on_all_subfolders_toggle(self, toggle):
-        self.cf.include_all_subfolders = toggle.get_active()
-        if self.cf.include_all_subfolders:
-            self.cf.include_subfolders = False
-            self.depth = -1
-        else:
-            self.depth = 1
-        self.process_images()
+    def reset_input_fields(self) -> None:
+        """Reset all input fields and remove focus from them"""
+        self.search_entry.set_visible(False)
+        self.search_entry.set_visible(True)
+        self.swww_angle_entry.set_visible(False)
+        self.swww_angle_entry.set_visible(True)
+        self.swww_steps_entry.set_visible(False)
+        self.swww_steps_entry.set_visible(True)
+        self.swww_duration_entry.set_visible(False)
+        self.swww_duration_entry.set_visible(True)
+        self.swww_fps_entry.set_visible(False)
+        self.swww_fps_entry.set_visible(True)
+        self.main_box.grab_focus()
+        self.is_enering_text = False
+
+    def on_window_clicked(self, widget, event) -> bool:
+        """Handle clicks outside of input fields to unfocus them"""
+        if self.is_enering_text:
+            x, y = event.get_coords()
+
+            focused_widget = self.get_focus()
+            if focused_widget is not None:
+                alloc = focused_widget.get_allocation()
+                widget_x, widget_y = focused_widget.translate_coordinates(self, 0, 0) if focused_widget.translate_coordinates(self, 0, 0) else (0, 0)
+
+                if (x < widget_x or x > widget_x + alloc.width or
+                    y < widget_y or y > widget_y + alloc.height):
+                    self.reset_input_fields()
+                    return True
+
+        return False
 
     def run(self) -> None:
         """Run GUI application"""
         self.connect("destroy", self.on_exit_clicked)
         self.show_all()
         Gtk.main()
-

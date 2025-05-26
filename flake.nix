@@ -12,15 +12,16 @@
         config.allowUnfree = true;
       };
     in {
-      default = pkgs.python3Packages.buildPythonPackage rec {
+      default = pkgs.python3Packages.buildPythonApplication rec {
         pname = "waypaper";
         version = "unstable";
 
         src = ./.;
 
-        nativeBuildInputs = [
-          pkgs.gobject-introspection
-          pkgs.wrapGAppsHook  # Ensures GTK libraries are wrapped correctly
+        nativeBuildInputs = with pkgs; [
+          glib
+          gobject-introspection
+          wrapGAppsHook4
         ];
 
         buildInputs = [
@@ -31,26 +32,31 @@
           pkgs.python3Packages.imageio-ffmpeg
           pkgs.python3Packages.screeninfo
           pkgs.python3Packages.platformdirs
+          pkgs.wrapGAppsHook4
         ];
 
         propagatedBuildInputs = [
           pkgs.killall
           pkgs.gtk3
           pkgs.python3Packages.pygobject3
-          pkgs.python3Packages.importlib-metadata
           pkgs.python3Packages.imageio
           pkgs.python3Packages.pillow
           pkgs.python3Packages.imageio-ffmpeg
           pkgs.python3Packages.screeninfo
           pkgs.python3Packages.platformdirs
           pkgs.socat
+          pkgs.wrapGAppsHook4
         ];
 
         # No tests available
         doCheck = false;
 
         # Let wrapGAppsHook handle wrapping
-        dontWrapGApps = false;
+        dontWrapGApps = true;
+
+        preFixup = ''
+          makeWrapperArgs+=("''${gappsWrapperArgs[@]}")
+        '';
 
         meta = with pkgs.lib; {
           changelog = "https://github.com/anufrievroman/waypaper/releases";
@@ -75,10 +81,11 @@
       buildInputs = with pkgs; [
         gtk3
         python3
+        glib
         gobject-introspection
-        wrapGAppsHook
+        wrapGAppsHook4
         killall
-        pkgs.python3Packages.pygobject3
+        python3Packages.pygobject3
       ];
     };
   };

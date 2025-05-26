@@ -7,7 +7,6 @@ import json
 import pathlib
 import threading
 
-from waypaper.aboutdata import AboutData
 from waypaper.app import App
 from waypaper.changer import change_wallpaper
 from waypaper.common import get_random_file
@@ -16,8 +15,7 @@ from waypaper.options import BACKEND_OPTIONS, FILL_OPTIONS, MONITOR_OPTIONS
 from waypaper.translations import load_language
 
 
-# Get application metadata:
-about = AboutData()
+__version__ = "2.6"
 
 # Get application settings and language package:
 cf = Config()
@@ -27,14 +25,14 @@ txt = load_language(cf.lang)
 
 # Define command line argument parser and parse user arguments:
 parser = argparse.ArgumentParser(
-    prog=about.applicationName(), description=txt.msg_desc, epilog=txt.msg_info
+    prog="waypaper", description=txt.msg_desc, epilog=txt.msg_info
 )
 parser.add_argument("-v", "--version", help=txt.msg_arg_help, action="store_true")
 parser.add_argument("--restore", help=txt.msg_arg_rest, action="store_true")
 parser.add_argument("--random", help=txt.msg_arg_rand, action="store_true")
 parser.add_argument("--fill", help=txt.msg_arg_fill, choices=FILL_OPTIONS)
 parser.add_argument("--wallpaper", help=txt.msg_arg_wall)
-parser.add_argument("--folder", help=txt.msg_arg_folder)
+parser.add_argument("--folder", help=txt.msg_arg_folder, nargs="+", default = [])
 parser.add_argument("--state-file", help=txt.msg_arg_statefile)
 parser.add_argument("--backend", help=txt.msg_arg_back, choices=BACKEND_OPTIONS)
 parser.add_argument("--list", help=txt.msg_arg_list, action='store_true')
@@ -63,7 +61,8 @@ def run():
 
         # Otherwise set a random wallpaper:
         else:
-            wallpaper_str = get_random_file(cf.backend, str(cf.image_folder), cf.include_subfolders, cf.cache_dir, cf.show_hidden)
+            wallpaper_str = get_random_file(cf.backend, cf.image_folder_list, cf.include_subfolders,
+                                            cf.include_all_subfolders, cf.cache_dir, cf.show_hidden)
             if wallpaper_str:
                 wallpaper = pathlib.Path(wallpaper_str)
             else:
@@ -88,7 +87,8 @@ def run():
     if args.restore or args.random:
         for index, (wallpaper, monitor) in enumerate(zip(cf.wallpapers, cf.monitors)):
             if args.random:
-                wallpaper_str = get_random_file(cf.backend, str(cf.image_folder), cf.include_subfolders, cf.cache_dir, cf.show_hidden)
+                wallpaper_str = get_random_file(cf.backend, cf.image_folder_list, cf.include_subfolders,
+                                                cf.include_all_subfolders, cf.cache_dir, cf.show_hidden)
                 if wallpaper_str:
                     wallpaper = pathlib.Path(wallpaper_str)
                     cf.wallpapers[index] = wallpaper
@@ -123,15 +123,15 @@ def run():
             cf.save()
         sys.exit(0)
 
-    # Output wallpapers and monitors in json format:
+    # Output some information in json format:
     if args.list:
-        wallpapers_and_monitors = list(map(lambda x: {"monitor": x[0], "wallpaper": str(x[1])}, zip(cf.monitors,cf.wallpapers)))
-        print(json.dumps(wallpapers_and_monitors))
+        info = list(map(lambda x: {"monitor": x[0], "wallpaper": str(x[1]), "backend": cf.backend}, zip(cf.monitors, cf.wallpapers)))
+        print(json.dumps(info))
         sys.exit(0)
 
     # Print the version and quit:
     if args.version:
-        print(f"{about.applicationName()} v.{about.applicationVersion()}")
+        print(f"waypaper v.{__version__}")
         sys.exit(0)
 
     # Start GUI:
