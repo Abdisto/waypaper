@@ -34,11 +34,7 @@ class App(Gtk.Window):
         self.is_enering_text = False
         self.number_of_resize = 0
         self.init_ui()
-<<<<<<< HEAD
         self.main_box.grab_focus()
-=======
-        self.backend_option_combo.grab_focus()
->>>>>>> c794982d8c700b5ff4317c07225bf45d640f1012
 
         # Start the image processing in a separate thread:
         threading.Thread(target=self.process_images).start()
@@ -266,11 +262,8 @@ class App(Gtk.Window):
         # Connect the key press events to various actions:
         self.connect("key-press-event", self.on_key_pressed)
 
-<<<<<<< HEAD
         self.connect("button-press-event", self.on_window_clicked)
 
-=======
->>>>>>> c794982d8c700b5ff4317c07225bf45d640f1012
         # Connect window resizing events to change the number of columns.
         # self.connect("size-allocate", self.on_window_resize)
 
@@ -310,15 +303,12 @@ class App(Gtk.Window):
         self.show_path_in_tooltip_checkbox.set_active(self.cf.show_path_in_tooltip)
         self.show_path_in_tooltip_checkbox.connect("toggled", self.on_show_path_in_tooltip_toggled)
         self.menu.append(self.show_path_in_tooltip_checkbox)
-<<<<<<< HEAD
 
         # Create zen mode toggle:
         self.zen_mode_checkbox = Gtk.CheckMenuItem(label=self.txt.msg_zen)
         self.zen_mode_checkbox.set_active(self.cf.zen_mode)
         self.zen_mode_checkbox.connect("toggled", self.on_zen_mode_toggled)
         self.menu.append(self.zen_mode_checkbox)
-=======
->>>>>>> c794982d8c700b5ff4317c07225bf45d640f1012
 
         self.menu.show_all()
 
@@ -564,20 +554,6 @@ class App(Gtk.Window):
         # self.number_of_resize = 0
 
 
-    # def on_window_resize(self, widget, allocation) -> None:
-        # """Recalculate the number of columns on window resize and repopulate the grid"""
-
-        # As frequent resize freezed the interface, so we only do it each fifth resize:
-        # self.number_of_resize += 1
-        # if self.number_of_resize < 5:
-            # return
-
-        # Calculate new number of columns and reload the grid:
-        # self.cf.number_of_columns = max(1, allocation.width // 250)
-        # GLib.idle_add(self.load_image_grid)
-        # self.number_of_resize = 0
-
-
     def scroll_to_selected_image(self) -> None:
         """Scroll the window to see the highlighted image"""
         scrolled_window_height = self.scrolled_window.get_vadjustment().get_page_size()
@@ -778,22 +754,7 @@ class App(Gtk.Window):
         # Processing keys for losing focus on text fields:
         if self.is_enering_text:
             if event.keyval in [Gdk.KEY_Escape, Gdk.KEY_Return, Gdk.KEY_KP_Enter]:
-<<<<<<< HEAD
                 self.reset_input_fields()
-=======
-                self.search_entry.set_visible(False)
-                self.search_entry.set_visible(True)
-                self.swww_angle_entry.set_visible(False)
-                self.swww_angle_entry.set_visible(True)
-                self.swww_steps_entry.set_visible(False)
-                self.swww_steps_entry.set_visible(True)
-                self.swww_duration_entry.set_visible(False)
-                self.swww_duration_entry.set_visible(True)
-                self.swww_fps_entry.set_visible(False)
-                self.swww_fps_entry.set_visible(True)
-                self.main_box.grab_focus()
-                self.is_enering_text = False
->>>>>>> c794982d8c700b5ff4317c07225bf45d640f1012
             return
 
         # Processing rest of the keys:
@@ -878,7 +839,6 @@ class App(Gtk.Window):
 
     def on_focus_out(self, widget, event):
         self.is_enering_text = False
-<<<<<<< HEAD
 
     def reset_input_fields(self) -> None:
         """Reset all input fields and remove focus from them"""
@@ -911,8 +871,6 @@ class App(Gtk.Window):
                     return True
 
         return False
-=======
->>>>>>> c794982d8c700b5ff4317c07225bf45d640f1012
 
     def run(self) -> None:
         """Run GUI application"""

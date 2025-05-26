@@ -41,10 +41,7 @@ class Config:
         self.include_all_subfolders = False
         self.show_hidden = False
         self.show_gifs_only = False
-<<<<<<< HEAD
         self.zen_mode = False
-=======
->>>>>>> c794982d8c700b5ff4317c07225bf45d640f1012
         self.cache_dir = user_cache_path(self.name)
         self.config_dir = user_config_path(self.name)
         self.config_file = self.config_dir / "config.ini"
@@ -73,18 +70,12 @@ class Config:
         else:
             return ''
 
-<<<<<<< HEAD
 
-=======
->>>>>>> c794982d8c700b5ff4317c07225bf45d640f1012
     def get_image_folder_list(self, section: str, config) -> list[pathlib.Path]:
         image_folders_str: list[str] =  config.get(section, "folder", fallback = self.image_folder_fallback).split("\n")
         image_folder_list = [pathlib.Path(path_str).expanduser() for path_str in image_folders_str]
         return image_folder_list
-<<<<<<< HEAD
 
-=======
->>>>>>> c794982d8c700b5ff4317c07225bf45d640f1012
 
     def read(self) -> None:
         """Load data from the config.ini or use default if it does not exists"""
@@ -204,10 +195,7 @@ class Config:
         except PermissionError:
             print("Could not save state file due to permission error.")
 
-<<<<<<< HEAD
 
-=======
->>>>>>> c794982d8c700b5ff4317c07225bf45d640f1012
     def write_folder_list_to_config(self, section: str, config):
         config_save_folder_str = ""
         for i, folder in enumerate(self.image_folder_list):
@@ -244,10 +232,7 @@ class Config:
         config.set("Settings", "all_subfolders", str(self.include_all_subfolders))
         config.set("Settings", "show_hidden", str(self.show_hidden))
         config.set("Settings", "show_gifs_only", str(self.show_gifs_only))
-<<<<<<< HEAD
         config.set("Settings", "zen_mode", str(self.zen_mode))
-=======
->>>>>>> c794982d8c700b5ff4317c07225bf45d640f1012
         config.set("Settings", "post_command", self.post_command)
         config.set("Settings", "number_of_columns", str(self.number_of_columns))
         config.set("Settings", "swww_transition_type", str(self.swww_transition_type))
