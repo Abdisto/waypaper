@@ -42,12 +42,18 @@ class English:
         self.msg_choosefolder = "Please choose a folder"
         self.msg_caching = "Caching wallpapers..."
         self.msg_show_path_in_tooltip = "Show path in tooltip"
+<<<<<<< HEAD
         self.msg_zen = "Zen mode"
         self.msg_zen_enter = "You are entering Zen mode.\nPress z to return to normal mode."
 
         self.msg_help = "Waypaper's hotkeys:\n\nhjkl - Navigation (←↓↑→)\nEnter - Set selected wallpaper\nf - Change wallpaper folder\n"
         self.msg_help += "g - Scroll to top\nG - Scroll to bottom\nR - Set random wallpaper\nr - Recache wallpapers\n"
         self.msg_help += "z - Toggle zen mode\n"
+=======
+
+        self.msg_help = "Waypaper's hotkeys:\n\nhjkl - Navigation (←↓↑→)\nEnter - Set selected wallpaper\nf - Change wallpaper folder\n"
+        self.msg_help += "g - Scroll to top\nG - Scroll to bottom\nR - Set random wallpaper\nr - Recache wallpapers\n"
+>>>>>>> c794982d8c700b5ff4317c07225bf45d640f1012
         self.msg_help += ". - Toggle hidden images\ns - Toggle images in subfolders\n/ - Search\n? - Help\nq - Exit\n\n"
         self.msg_help += self.msg_info
 
@@ -90,9 +96,15 @@ class German:
         self.msg_arg_folder = "legt fest, welcher Ordner nach Hintergrundbildern durchsucht werden soll"
         self.msg_arg_statefile = "specify a custom file to store the application state"
         self.msg_arg_monitor = "geben Sie den gewünschten Monitor mit seinem Namen an"
+<<<<<<< HEAD
         self.msg_arg_post = "verhindert das Ausführen des in der Konfiguration festgelegten post_command"
         self.msg_arg_show_path_in_tooltip = "zeigt den relativen Pfad im Tooltip an"
         self.msg_show_path_in_tooltip = "Pfad im Tooltip anzeigen"
+=======
+        self.msg_arg_post = "prevents running post_command set in config"
+        self.msg_arg_show_path_in_tooltip = "show the relative path in the tooltip"
+        self.msg_show_path_in_tooltip = "Show path in tooltip"
+>>>>>>> c794982d8c700b5ff4317c07225bf45d640f1012
 
         self.msg_select = "Auswählen"
         self.msg_refresh = "Aktualisieren"
@@ -113,6 +125,7 @@ class German:
         self.msg_changefolder = "Ordner"
         self.msg_choosefolder = "Bitte wählen Sie einen Ordner aus"
         self.msg_caching = "Hintergrundbilder werden zwischengespeichert..."
+<<<<<<< HEAD
         self.msg_show_path_in_tooltip = "Pfad in Tooltip anzeigen"
         self.msg_zen = "Zen-Modus"
         self.msg_zen_enter = "Du betrittst den Zen-Modus.\nDrücke z, um in den normalen Modus zurückzukehren."
@@ -120,6 +133,12 @@ class German:
         self.msg_help = "Waypapers Tastenkürzel:\n\nhjkl - Navigation (←↓↑→)\nf - Hintergrundbild-Ordner ändern\n"
         self.msg_help += "g - Zum Anfang scrollen\nG - Zum Ende scrollen\nR - Zufälliges Hintergrundbild\nr - Hintergrundbilder zwischenspeichern\n"
         self.msg_help += "z - Toggle zen mode\n"
+=======
+        self.msg_show_path_in_tooltip = "Show path in tooltip"
+
+        self.msg_help = "Waypapers Tastenkürzel:\n\nhjkl - Navigation (←↓↑→)\nf - Hintergrundbild-Ordner ändern\n"
+        self.msg_help += "g - Zum Anfang scrollen\nG - Zum Ende scrollen\nR - Zufälliges Hintergrundbild\nr - Hintergrundbilder zwischenspeichern\n"
+>>>>>>> c794982d8c700b5ff4317c07225bf45d640f1012
         self.msg_help += ". - Versteckte Bilder einbeziehen/ausschließen\ns - Unterordner mit einbeziehen\n/ - Search\n? - Hilfe\nq - Beenden\n\n"
         self.msg_help += self.msg_info
 
@@ -142,9 +161,15 @@ class German:
         self.tip_transition = "Übergangstyp auswählen"
         self.tip_mpv_stop = "Stop allpe alle mpv-Prozesse"
         self.tip_mpv_pause = "Pause Video-Wallpaper"
+<<<<<<< HEAD
         self.tip_mpv_sound = "Ton des Videos abspielen"
         self.tip_timer = "Wie oft das Hintergrundbild automatisch gewechselt wird"
         self.tip_start = "Automatischen Hintergrundbildwechsel nach einem Zeitintervall starten"
+=======
+        self.tip_mpv_sound = "Play sound of the video"
+        self.tip_timer = "How often to automatically change wallpaper"
+        self.tip_start = "Initiate automatic change of wallpaper after a time interval"
+>>>>>>> c794982d8c700b5ff4317c07225bf45d640f1012
 
 class French:
     def __init__(self):
@@ -156,6 +181,7 @@ class French:
         self.msg_arg_rest = "restaurer le dernier papier peint"
         self.msg_arg_back = "spécifier quel backend utiliser pour définir le papier peint"
         self.msg_arg_rand = "définir un papier peint aléatoire"
+<<<<<<< HEAD
         self.msg_arg_list = "liste certains paramètres en JSON vers la sortie standard"
         self.msg_arg_wall = "définir le fond d’écran spécifié"
         self.msg_arg_folder = "spécifier le dossier à analyser pour les fonds d’écran"
@@ -163,6 +189,15 @@ class French:
         self.msg_arg_monitor = "spécifiez le moniteur souhaité en utilisant son nom"
         self.msg_arg_post = "empêche l'exécution de post_command défini dans la configuration"
         self.msg_arg_show_path_in_tooltip = "afficher le chemin relatif dans l'infobulle"
+=======
+        self.msg_arg_list = "lists some parameters in json to standard out"
+        self.msg_arg_wall = "set the specified wallpaper"
+        self.msg_arg_folder = "specify which folder to scan for wallpapers"
+        self.msg_arg_statefile = "specify a custom file to store the application state"
+        self.msg_arg_monitor = "spécifiez le moniteur souhaité en utilisant son nom"
+        self.msg_arg_post = "prevents running post_command set in config"
+        self.msg_arg_show_path_in_tooltip = "show the relative path in the tooltip"
+>>>>>>> c794982d8c700b5ff4317c07225bf45d640f1012
 
         self.msg_select = "Sélectionner"
         self.msg_refresh = "Actualiser"
@@ -183,6 +218,7 @@ class French:
         self.msg_changefolder = "Dossier"
         self.msg_choosefolder = "Veuillez choisir un dossier"
         self.msg_caching = "Mise en cache des papiers peints..."
+<<<<<<< HEAD
         self.msg_show_path_in_tooltip = "Afficher le chemin dans l'infobulle"
         self.msg_zen = "Mode Zen"
         self.msg_zen_enter = "Vous entrez en mode Zen.\nAppuyez sur z pour revenir au mode normal."
@@ -190,6 +226,12 @@ class French:
         self.msg_help = "Raccourcis clavier de Waypaper :\n\nhjkl - Navigation (←↓↑→)\nf - Changer de dossier de papier peint\n"
         self.msg_help += "g - Faire défiler vers le haut\nG - Faire défiler vers le bas\nR - Définir un papier peint aléatoire\nr - Recréer le cache des papiers peints\n"
         self.msg_help += "z - Toggle zen mode\n"
+=======
+        self.msg_show_path_in_tooltip = "Show path in tooltip"
+
+        self.msg_help = "Raccourcis clavier de Waypaper :\n\nhjkl - Navigation (←↓↑→)\nf - Changer de dossier de papier peint\n"
+        self.msg_help += "g - Faire défiler vers le haut\nG - Faire défiler vers le bas\nR - Définir un papier peint aléatoire\nr - Recréer le cache des papiers peints\n"
+>>>>>>> c794982d8c700b5ff4317c07225bf45d640f1012
         self.msg_help += ". - Inclure/exclure les images cachées\ns - Inclure/exclure les images des sous-dossiers\n/ - Search\n? - Aide\nq - Quitter\n\n"
         self.msg_help += self.msg_info
 
@@ -212,9 +254,15 @@ class French:
         self.tip_transition = "Choisissez le type de transition"
         self.tip_mpv_stop = "Arrêter tous les processus mpv"
         self.tip_mpv_pause = "Pause du fond d'écran vidéo"
+<<<<<<< HEAD
         self.tip_mpv_sound = "Lire le son de la vidéo"
         self.tip_timer = "Fréquence de changement automatique du fond d’écran"
         self.tip_start = "Lancer le changement automatique du fond d’écran après un intervalle de temps"
+=======
+        self.tip_mpv_sound = "Play sound of the video"
+        self.tip_timer = "How often to automatically change wallpaper"
+        self.tip_start = "Initiate automatic change of wallpaper after a time interval"
+>>>>>>> c794982d8c700b5ff4317c07225bf45d640f1012
 
 class Polish:
     def __init__(self):
@@ -231,8 +279,13 @@ class Polish:
         self.msg_arg_folder = "ustaw folder do przeskanowania szukając tapet"
         self.msg_arg_statefile = "ustaw plik, żeby przechowywać stan aplikacji"
         self.msg_arg_monitor = "ustaw pożądany monitor używając jego nazwy"
+<<<<<<< HEAD
         self.msg_arg_post = "zapobiega uruchomieniu post_command ustawionego w konfiguracji"
         self.msg_arg_show_path_in_tooltip = "pokaż względną ścieżkę w podpowiedzi"
+=======
+        self.msg_arg_post = "prevents running post_command set in config"
+        self.msg_arg_show_path_in_tooltip = "show the relative path in the tooltip"
+>>>>>>> c794982d8c700b5ff4317c07225bf45d640f1012
 
         self.msg_select = "Wybierz"
         self.msg_refresh = "Odświerz"
@@ -253,6 +306,7 @@ class Polish:
         self.msg_changefolder = "Folder"
         self.msg_choosefolder = "Proszę wybrać folder"
         self.msg_caching = "Buforowanie tapet..."
+<<<<<<< HEAD
         self.msg_show_path_in_tooltip = "Pokaż ścieżkę w podpowiedzi"
         self.msg_zen = "Tryb Zen"
         self.msg_zen_enter = "Wchodzisz w tryb Zen.\nNaciśnij z, aby wrócić do trybu normalnego."
@@ -260,6 +314,12 @@ class Polish:
         self.msg_help = "Skróty klawiszowe Waypaper'a:\n\nhjkl - Nawigacja (←↓↑→)\nEnter - Ustaw wybraną tapetę\nf - Zmień folder tapet\n"
         self.msg_help += "g - Przewiń na górę\nG - Przewiń na dół\nR - Ustaw losową tapetę\nr - Jeszcze raz buferuj tapety\n"
         self.msg_help += "z - Toggle zen mode\n"
+=======
+        self.msg_show_path_in_tooltip = "Show path in tooltip"
+
+        self.msg_help = "Skróty klawiszowe Waypaper'a:\n\nhjkl - Nawigacja (←↓↑→)\nEnter - Ustaw wybraną tapetę\nf - Zmień folder tapet\n"
+        self.msg_help += "g - Przewiń na górę\nG - Przewiń na dół\nR - Ustaw losową tapetę\nr - Jeszcze raz buferuj tapety\n"
+>>>>>>> c794982d8c700b5ff4317c07225bf45d640f1012
         self.msg_help += ". - Pokaż/ukryj ukryte tapety\ns - Włącz/wyłącz tapety w podfolderach\n/ - Szukanie\n? - Pomoc\nq - Wyjście\n\n"
         self.msg_help += self.msg_info
 
@@ -283,9 +343,15 @@ class Polish:
         self.tip_transition = "Ustaw sposób przejścia"
         self.tip_mpv_stop = "Zatrzymaj wszystkie procesy mpv"
         self.tip_mpv_pause = "Odtwarzaj/Zatrzymaj animowaną"
+<<<<<<< HEAD
         self.tip_mpv_sound = "Odtwórz dźwięk z wideo"
         self.tip_timer = "Jak często automatycznie zmieniać tapetę"
         self.tip_start = "Rozpocznij automatyczną zmianę tapety po upływie określonego czasu"
+=======
+        self.tip_mpv_sound = "Play sound of the video"
+        self.tip_timer = "How often to automatically change wallpaper"
+        self.tip_start = "Initiate automatic change of wallpaper after a time interval"
+>>>>>>> c794982d8c700b5ff4317c07225bf45d640f1012
 
 class Russian:
     def __init__(self):
@@ -304,8 +370,11 @@ class Russian:
         self.msg_arg_monitor = "указать имя монитора для которого устанавливаются обои"
         self.msg_arg_post = "предотвратить выполнение post_command"
         self.msg_arg_show_path_in_tooltip = "показывать относительный путь в подсказке"
+<<<<<<< HEAD
         self.msg_zen = "Режим Дзэн"
         self.msg_zen_enter = "Вы входите в режим Дзэн.\nНажмите z, чтобы вернуться в обычный режим."
+=======
+>>>>>>> c794982d8c700b5ff4317c07225bf45d640f1012
 
         self.msg_select = "Выбрать"
         self.msg_refresh = "Обновить"
@@ -330,7 +399,10 @@ class Russian:
 
         self.msg_help = "Горячие клавиши Waypaper:\n\nhjkl - Навигация (←↓↑→)\nf - Изменить папку с обоями\n"
         self.msg_help += "g - Прокрутка в начало\nG - Прокрутка в конец\nR - Установить случайные обои\nr - Обновить кэш обоев\n"
+<<<<<<< HEAD
         self.msg_help += "z - Переключать zen режим\n"
+=======
+>>>>>>> c794982d8c700b5ff4317c07225bf45d640f1012
         self.msg_help += ". - Показать/скрыть скрытые файлы \ns - Показать/скрыть вложенные папки\n/ - Поиск\n? - Справка\nq - Выход\n\n"
         self.msg_help += self.msg_info
 
@@ -373,8 +445,13 @@ class Belarusian:
         self.msg_arg_folder = "ўкажыце, які тэчку сканаваць для выявы"
         self.msg_arg_statefile = "ўкажыце карыстацкі файл для захавання стану прыкладання"
         self.msg_arg_monitor = "określ żądany monitor, używając jego nazwy"
+<<<<<<< HEAD
         self.msg_arg_post = "перашкаджае запуску post_command, зададзенага ў канфігурацыі"
         self.msg_arg_show_path_in_tooltip = "паказваць адносны шлях у падказцы"
+=======
+        self.msg_arg_post = "prevents running post_command set in config"
+        self.msg_arg_show_path_in_tooltip = "show the relative path in the tooltip"
+>>>>>>> c794982d8c700b5ff4317c07225bf45d640f1012
 
         self.msg_select = "Выбраць"
         self.msg_refresh = "Абнавіць"
@@ -396,12 +473,18 @@ class Belarusian:
         self.msg_choosefolder = "Калі ласка, абярыце тэчку"
         self.msg_caching = "Кэшаванне шпалер..."
         self.msg_show_path_in_tooltip = "Show path in tooltip"
+<<<<<<< HEAD
         self.msg_zen = "Рэжым Дзен"
         self.msg_zen_enter = "Вы ўваходзіце ў рэжым Дзен.\nНацісніце z, каб вярнуцца ў звычайны рэжым."
 
         self.msg_help = "Гарачыя клавішы Waypaper:\n\nhjkl - Навігацыя (←↓↑→)\nf - Змяніць тэчку са шпалерамі\n"
         self.msg_help += "g - Пракрутка ў пачатак\nG - Пракрутка ў канец\nR - Усталяваць выпадковыя шпалеры\nr - Абнавіць кэш шпалер\n"
         self.msg_help += "z - Toggle zen mode\n"
+=======
+
+        self.msg_help = "Гарачыя клавішы Waypaper:\n\nhjkl - Навігацыя (←↓↑→)\nf - Змяніць тэчку са шпалерамі\n"
+        self.msg_help += "g - Пракрутка ў пачатак\nG - Пракрутка ў канец\nR - Усталяваць выпадковыя шпалеры\nr - Абнавіць кэш шпалер\n"
+>>>>>>> c794982d8c700b5ff4317c07225bf45d640f1012
         self.msg_help += ". - Паказаць/схаваць схаваныя файлы \ns - Паказаць/схаваць укладзеныя тэчкі\n/ - Пошук\n? - Даведка\nq - Вынахад\n\n"
         self.msg_help += self.msg_info
 
@@ -424,9 +507,15 @@ class Belarusian:
         self.tip_transition = "Выберыце тып пераходу"
         self.tip_mpv_stop = "Спыніць усе працэсы mpv"
         self.tip_mpv_pause = "Паўза відэа-абояў"
+<<<<<<< HEAD
         self.tip_mpv_sound = "Прайграваць гук відэа"
         self.tip_timer = "Як часта аўтаматычна змяняць шпалеры"
         self.tip_start = "Пачаць аўтаматычную змену шпалераў пасля пэўнага інтэрвалу часу"
+=======
+        self.tip_mpv_sound = "Play sound of the video"
+        self.tip_timer = "How often to automatically change wallpaper"
+        self.tip_start = "Initiate automatic change of wallpaper after a time interval"
+>>>>>>> c794982d8c700b5ff4317c07225bf45d640f1012
 
 
 class Chinese:
@@ -444,8 +533,13 @@ class Chinese:
         self.msg_arg_folder = "指定扫描壁纸的文件夹"
         self.msg_arg_statefile = "指定用于存储应用程序状态的自定义文件"
         self.msg_arg_monitor = "通过其名称指定所需的显示器"
+<<<<<<< HEAD
         self.msg_arg_post = "阻止运行配置中设置的 post_command"
         self.msg_arg_show_path_in_tooltip = "在工具提示中显示相对路径"
+=======
+        self.msg_arg_post = "prevents running post_command set in config"
+        self.msg_arg_show_path_in_tooltip = "show the relative path in the tooltip"
+>>>>>>> c794982d8c700b5ff4317c07225bf45d640f1012
 
         self.msg_select = "选择"
         self.msg_refresh = "刷新"
@@ -466,6 +560,7 @@ class Chinese:
         self.msg_changefolder = "文件夹"
         self.msg_choosefolder = "请选择一个文件夹"
         self.msg_caching = "缓存壁纸..."
+<<<<<<< HEAD
         self.msg_show_path_in_tooltip = "在工具提示中显示路径"
         self.msg_zen = "禅模式"
         self.msg_zen_enter = "您正在进入禅模式。\n按 z 返回正常模式。"
@@ -473,6 +568,12 @@ class Chinese:
         self.msg_help = "Waypaper 的热键：\n\nhjkl -导航 (←↓↑→)\nf -更改壁纸文件夹\n"
         self.msg_help += "g -滚动到顶部\nG -滚动到底部\nR -设置随机壁纸\nr -重新缓存壁纸\n"
         self.msg_help += "z - Toggle zen mode\n"
+=======
+        self.msg_show_path_in_tooltip = "Show path in tooltip"
+
+        self.msg_help = "Waypaper 的热键：\n\nhjkl -导航 (←↓↑→)\nf -更改壁纸文件夹\n"
+        self.msg_help += "g -滚动到顶部\nG -滚动到底部\nR -设置随机壁纸\nr -重新缓存壁纸\n"
+>>>>>>> c794982d8c700b5ff4317c07225bf45d640f1012
         self.msg_help += ". - 包括/排除隐藏图像\ns -包含/排除子文件夹中的图像\n/ - Search\n？ -帮助\nq -退出\n\n"
         self.msg_help += self.msg_info
 
@@ -495,9 +596,15 @@ class Chinese:
         self.tip_transition = "选择过渡类型"
         self.tip_mpv_stop = "停止所有 mpv 进程"
         self.tip_mpv_pause = "暂停视频壁纸"
+<<<<<<< HEAD
         self.tip_mpv_sound = "播放视频的声音"
         self.tip_timer = "自动更换壁纸的频率"
         self.tip_start = "在设定的时间间隔后启动自动更换壁纸"
+=======
+        self.tip_mpv_sound = "Play sound of the video"
+        self.tip_timer = "How often to automatically change wallpaper"
+        self.tip_start = "Initiate automatic change of wallpaper after a time interval"
+>>>>>>> c794982d8c700b5ff4317c07225bf45d640f1012
 
 class TraditionalChinese:
     def __init__(self):
@@ -515,7 +622,11 @@ class TraditionalChinese:
         self.msg_arg_statefile = "指定用於儲存程式狀態的自定文件"
         self.msg_arg_monitor = "用螢幕的名稱來選擇壁紙在那一個螢幕顯示"
         self.msg_arg_post = "停止更換壁紙後運行的命令"
+<<<<<<< HEAD
         self.msg_arg_show_path_in_tooltip = "在工具提示中顯示相對路徑"
+=======
+        self.msg_arg_show_path_in_tooltip = "show the relative path in the tooltip"
+>>>>>>> c794982d8c700b5ff4317c07225bf45d640f1012
 
         self.msg_select = "選擇"
         self.msg_refresh = "刷新"
@@ -536,6 +647,7 @@ class TraditionalChinese:
         self.msg_changefolder = "文件夾"
         self.msg_choosefolder = "選擇文件夾"
         self.msg_caching = "緩存壁紙"
+<<<<<<< HEAD
         self.msg_show_path_in_tooltip = "在工具提示中顯示路徑"
         self.msg_zen = "禪模式"
         self.msg_zen_enter = "您正在進入禪模式。\n按 z 返回正常模式。"
@@ -543,6 +655,12 @@ class TraditionalChinese:
         self.msg_help = "Waypaper 的快捷鍵:\n\nhjkl - 行動 (←↓↑→)\nEnter - 設定選擇壁紙\nf - 選擇壁紙文件夾\n"
         self.msg_help += "g - 滾動到頂部\nG - 滾動到底部\nR - 隨機壁紙\nr - 重新玩全壁紙\n"
         self.msg_help += "z - Toggle zen mode\n"
+=======
+        self.msg_show_path_in_tooltip = "Show path in tooltip"
+
+        self.msg_help = "Waypaper 的快捷鍵:\n\nhjkl - 行動 (←↓↑→)\nEnter - 設定選擇壁紙\nf - 選擇壁紙文件夾\n"
+        self.msg_help += "g - 滾動到頂部\nG - 滾動到底部\nR - 隨機壁紙\nr - 重新玩全壁紙\n"
+>>>>>>> c794982d8c700b5ff4317c07225bf45d640f1012
         self.msg_help += ". - 顯示隱藏的圖片\ns - 顯示在子文件夾的圖片\n/ - Search\n? - 協助\nq - 退出\n\n"
         self.msg_help += self.msg_info
 
@@ -585,8 +703,13 @@ class Spanish:
         self.msg_arg_folder = "specify which folder to scan for wallpapers"
         self.msg_arg_statefile = "specify a custom file to store the application state"
         self.msg_arg_monitor = "especifique el monitor deseado usando su nombre"
+<<<<<<< HEAD
         self.msg_arg_post = "impide ejecutar el post_command definido en la configuración"
         self.msg_arg_show_path_in_tooltip = "mostrar la ruta relativa en la información sobre herramientas"
+=======
+        self.msg_arg_post = "prevents running post_command set in config"
+        self.msg_arg_show_path_in_tooltip = "show the relative path in the tooltip"
+>>>>>>> c794982d8c700b5ff4317c07225bf45d640f1012
 
         self.msg_select = "Selecciona"
         self.msg_refresh = "Actualizar"
@@ -607,6 +730,7 @@ class Spanish:
         self.msg_changefolder = "Carpeta"
         self.msg_choosefolder = "Por favor, selecciona una carpeta"
         self.msg_caching = "Almacenando en el caché..."
+<<<<<<< HEAD
         self.msg_show_path_in_tooltip = "Mostrar la ruta en la información sobre herramientas"
         self.msg_zen = "Modo Zen"
         self.msg_zen_enter = "Estás entrando en el modo Zen.\nPresiona z para volver al modo normal."
@@ -614,6 +738,12 @@ class Spanish:
         self.msg_help = 'Controles para usar "Waypaper":\n\nhjkl - Navegación (←↓↑→)\n"Enter" (⏎) - Actualizar imagen de fondo a la imágen seleccionada\nf - Cambiar carpeta de imágenes\n'
         self.msg_help += "g - Ir a la parte de arriba\nG - Ir a la parte de abajo\nR - Cambiar imagen de fondo a una imágen aleatoria\nr - Recrear caché de imágenes\n"
         self.msg_help += "z - Toggle zen mode\n"
+=======
+        self.msg_show_path_in_tooltip = "Show path in tooltip"
+
+        self.msg_help = 'Controles para usar "Waypaper":\n\nhjkl - Navegación (←↓↑→)\n"Enter" (⏎) - Actualizar imagen de fondo a la imágen seleccionada\nf - Cambiar carpeta de imágenes\n'
+        self.msg_help += "g - Ir a la parte de arriba\nG - Ir a la parte de abajo\nR - Cambiar imagen de fondo a una imágen aleatoria\nr - Recrear caché de imágenes\n"
+>>>>>>> c794982d8c700b5ff4317c07225bf45d640f1012
         self.msg_help += ". - Ver/Omitir archivos ocultos\ns - Ver/Omitir imágenes en subcarpetas\n/ - Search\n? - Ayuda\nq - Cerrar aplicación\n\n"
         self.msg_help += self.msg_info
 
@@ -636,9 +766,15 @@ class Spanish:
         self.tip_transition = "Elige el tipo de transición"
         self.tip_mpv_stop = "Detener todos los procesos de mpv"
         self.tip_mpv_pause = "Pausar fondo de pantalla de video"
+<<<<<<< HEAD
         self.tip_mpv_sound = "Reproducir el sonido del video"
         self.tip_timer = "Frecuencia con la que se cambia automáticamente el fondo de pantalla"
         self.tip_start = "Iniciar el cambio automático del fondo de pantalla después de un intervalo de tiempo"
+=======
+        self.tip_mpv_sound = "Play sound of the video"
+        self.tip_timer = "How often to automatically change wallpaper"
+        self.tip_start = "Initiate automatic change of wallpaper after a time interval"
+>>>>>>> c794982d8c700b5ff4317c07225bf45d640f1012
 
 
 def load_language(lang):

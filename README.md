@@ -13,7 +13,11 @@ GUI wallpaper setter for Wayland and Xorg window managers. It works as a fronten
 - Works on Wayland (with `swww` or `swaybg` or `hyprpaper` or `wallutils` or `mpvpaper`)
 - Works on Xorg (with `feh` or `wallutils`)
 - Restores wallpaper after restart (`waypaper --restore`)
+<<<<<<< HEAD
 - Fast and minimal (315 kB)
+=======
+- Fast and minimal
+>>>>>>> c794982d8c700b5ff4317c07225bf45d640f1012
 
 ## Installation
 
